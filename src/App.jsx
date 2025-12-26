@@ -384,7 +384,7 @@ export default function AuctusAIWebsite() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-cyan-400">•</span>
-                    <span>ROI typically realized within 6-9 months of deployment</span>
+                    <span>ROI typically realized within 3-6 months of deployment</span>
                   </li>
                 </ul>
               </div>
@@ -548,7 +548,7 @@ export default function AuctusAIWebsite() {
             </div>
             <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
               <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900 mb-2">6-9 Months</div>
+                <div className="text-3xl font-bold text-slate-900 mb-2">3-6 Months</div>
                 <div className="text-slate-600">Typical time to ROI realization</div>
               </div>
             </div>
