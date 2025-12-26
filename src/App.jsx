@@ -309,7 +309,7 @@ export default function AuctusAIWebsite() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Expected Outcomes</h2>
             <p className="text-xl text-blue-200">
-              Based on validated customer deployments with $10M-$50M ARR
+              Based on  customer deployments with $10M-$500M ARR
             </p>
           </div>
 
