@@ -1,693 +1,721 @@
-import React, { useState } from 'react';
-import { ArrowRight, TrendingUp, Target, Zap, Users, BarChart3, Brain, CheckCircle2, Star, ChevronDown, RefreshCw, GitBranch, Shield } from 'lucide-react';
+import { useState, useEffect } from "react";
 
-export default function AuctusAIWebsite() {
-  const [openFaq, setOpenFaq] = useState(null);
+// ─── TYPES ────────────────────────────────────────────────────────────────────
+interface Pillar { id: string; name: string; weight: string; color: string; kpis: string[]; }
+interface Feature { icon: string; title: string; desc: string; tag: string; tagColor: string; }
+
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const PILLARS: Pillar[] = [
+  { id:"P1", name:"Deployment Velocity",      weight:"30%", color:"#0EA5E9",
+    kpis:["GPU Cluster Uptime","Training Completion Rate","Deployment Lead Time","Provisioning Success Rate"] },
+  { id:"P2", name:"Operational Stability",    weight:"25%", color:"#10B981",
+    kpis:["System Reliability Score","Incident Response Time","SLA Adherence","MTTR"] },
+  { id:"P3", name:"AI Workload Performance",  weight:"20%", color:"#8B5CF6",
+    kpis:["Inference Latency","Throughput Efficiency","Model Accuracy Trend","GPU Utilization Rate"] },
+  { id:"P4", name:"Channel Partner Health",   weight:"15%", color:"#F59E0B",
+    kpis:["Partner Engagement Score","Co-sell Pipeline Health","Certification Compliance","Support Ticket Volume"] },
+  { id:"P5", name:"Expansion Readiness",      weight:"10%", color:"#EF4444",
+    kpis:["Expansion Signal Score","Feature Saturation Rate","Upsell Opportunity Index","Executive Sponsor Activity"] },
+];
+
+const FEATURES: Feature[] = [
+  { icon:"🧬", title:"Synthetic Data Engine",   desc:"8 pre-built health trajectory scenarios — churn freefall to turnaround recovery. Demo and train without touching production data.",      tag:"Data Layer",      tagColor:"#0EA5E9" },
+  { icon:"🔍", title:"Qdrant Vector Search",     desc:"Dual-collection semantic search across 20+ qualitative signals per account. Emails, escalations, meeting notes — all context-retrieved.", tag:"AI Infrastructure", tagColor:"#8B5CF6" },
+  { icon:"🧠", title:"Signal Analyst Agent",     desc:"AI agent combining PostgreSQL KPIs + Qdrant qualitative signals into a natural-language health recommendation with early-warning flags.", tag:"Agentic AI",       tagColor:"#6366F1" },
+  { icon:"🎯", title:"Playbook Orchestration",   desc:"7 trigger conditions with P1/P2/P3 severity routing. Every critical account gets a named CSM owner and resolution date.",              tag:"Automation",       tagColor:"#F59E0B" },
+  { icon:"📈", title:"Revenue Intelligence",     desc:"Monthly account-level revenue risk and expansion scoring. Compounding incremental improvements drive measurable ARR protection over time.", tag:"Methodology",     tagColor:"#10B981" },
+  { icon:"⚙️", title:"Wizard A / B / C Pipeline", desc:"Journey Generator → Pattern Analyzer → Weight Optimizer. Three sequential AI wizards that run automatically on onboarding and monthly.", tag:"ML Pipeline",     tagColor:"#EF4444" },
+  { icon:"🏢", title:"Multi-Tenant Architecture", desc:"UUID-based fully isolated customer environments. Independent Qdrant collections and PostgreSQL schemas. Zero cross-tenant exposure.",    tag:"Enterprise",      tagColor:"#0369A1" },
+  { icon:"🔄", title:"Continuous Weight Learning", desc:"Wizard C recalibrates L1/L2 health scoring weights monthly from your actual outcomes. The model converges to your customer reality.",  tag:"Self-Learning",   tagColor:"#7C3AED" },
+];
+
+const VERTICALS = [
+  { label:"SaaS",              icon:"☁️",  color:"#0EA5E9" },
+  { label:"Data Center",       icon:"🖥️",  color:"#10B981" },
+  { label:"Healthcare",        icon:"🏥",  color:"#8B5CF6" },
+  { label:"Financial Services",icon:"💹",  color:"#F59E0B" },
+  { label:"Manufacturing",     icon:"⚙️",  color:"#EF4444" },
+  { label:"Retail / E-Comm",   icon:"🛒",  color:"#EC4899" },
+];
+
+const RINGS = [
+  { label:"Revenue Intelligence", r:210, delay:0 },
+  { label:"AI Governance",        r:255, delay:0.6 },
+  { label:"Explainability",       r:300, delay:1.2 },
+  { label:"Human-in-the-Loop",    r:345, delay:1.8 },
+];
+
+// ─── HEALTH BAR ───────────────────────────────────────────────────────────────
+function HealthBar({ score, color }: { score: number; color: string }) {
+  const auto = score >= 80 ? "#10B981" : score >= 60 ? "#F59E0B" : "#EF4444";
+  return (
+    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+      <div style={{ flex:1, height:5, background:"#1E293B", borderRadius:999 }}>
+        <div style={{ width:`${score}%`, height:"100%", background:color||auto, borderRadius:999 }} />
+      </div>
+      <span style={{ fontSize:11, fontWeight:700, color:color||auto, minWidth:24 }}>{score}</span>
+    </div>
+  );
+}
+
+// ─── 3D HEXAGONAL PRISM ───────────────────────────────────────────────────────
+function HexPrism() {
+  const [angle, setAngle] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setAngle(a => (a + 0.3) % 360), 30);
+    return () => clearInterval(id);
+  }, []);
+
+  // Hexagonal prism geometry
+  const FW = 170;   // face width px
+  const FH = 190;   // face height px
+  const APO = 147;  // apothem = FW * √3/2
+
+  const faces = VERTICALS.map((v, i) => ({
+    ...v,
+    rotY: i * 60,
+    z: APO,
+  }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-lg border-b border-slate-200 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <div className="font-bold text-xl tracking-tight text-slate-900">AuctusAI</div>
-              <div className="text-xs text-slate-500 -mt-1">CS Pulse Platform</div>
-            </div>
+    <div style={{ width:"100%", display:"flex", justifyContent:"center", alignItems:"center", padding:"60px 0 120px", position:"relative" }}>
+
+      {/* Outer ring glow */}
+      <div style={{ position:"absolute", inset:0, display:"flex", justifyContent:"center", alignItems:"center", pointerEvents:"none" }}>
+        <div style={{ width:700, height:700, borderRadius:"50%", background:"radial-gradient(circle, rgba(14,165,233,0.07) 0%, transparent 65%)" }} />
+      </div>
+
+      {/* 3D Prism scene */}
+      <div style={{ position:"relative", zIndex:2 }}>
+        <div style={{ perspective:900, perspectiveOrigin:"50% 45%" }}>
+          <div style={{
+            width:FW, height:FH,
+            position:"relative",
+            transformStyle:"preserve-3d",
+            transform:`rotateX(-14deg) rotateY(${angle}deg)`,
+            margin:"0 auto",
+          }}>
+
+            {/* Top hex cap */}
+            <div style={{
+              position:"absolute", width:FW, height:FW,
+              left:0, top:`-${FW/2 - 10}px`,
+              transformStyle:"preserve-3d",
+              transform:"rotateX(90deg) translateZ(0px)",
+              background:"conic-gradient(from 0deg, #0EA5E940, #10B98140, #8B5CF640, #F59E0B40, #EF444440, #EC489940, #0EA5E940)",
+              clipPath:"polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+              filter:"blur(1px)",
+            }} />
+
+            {/* Bottom hex cap */}
+            <div style={{
+              position:"absolute", width:FW, height:FW,
+              left:0, bottom:`-${FW/2 - 10}px`,
+              transformStyle:"preserve-3d",
+              transform:"rotateX(-90deg) translateZ(0px)",
+              background:"conic-gradient(from 0deg, #0EA5E920, #10B98120, #8B5CF620, #F59E0B20, #EF444420, #EC489920, #0EA5E920)",
+              clipPath:"polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+              filter:"blur(2px)",
+            }} />
+
+            {/* 6 side faces */}
+            {faces.map((f, i) => (
+              <div key={f.label} style={{
+                position:"absolute",
+                width:FW, height:FH,
+                left:0, top:0,
+                backfaceVisibility:"hidden",
+                transform:`rotateY(${f.rotY}deg) translateZ(${f.z}px)`,
+                background:`linear-gradient(160deg, ${f.color}18 0%, ${f.color}08 100%)`,
+                border:`1px solid ${f.color}55`,
+                display:"flex", flexDirection:"column",
+                alignItems:"center", justifyContent:"center", gap:10,
+                borderRadius:4,
+                boxShadow:`inset 0 0 30px ${f.color}15, 0 0 40px ${f.color}20`,
+              }}>
+                <div style={{ fontSize:34 }}>{f.icon}</div>
+                <div style={{ fontSize:13, fontWeight:700, color:"#E2E8F0", textAlign:"center", letterSpacing:"-0.01em", lineHeight:1.3, padding:"0 12px" }}>
+                  {f.label}
+                </div>
+                <div style={{ width:32, height:2, borderRadius:999, background:f.color, opacity:0.7 }} />
+                <div style={{ fontSize:10, color:f.color, fontWeight:600, letterSpacing:"0.08em", textTransform:"uppercase" }}>Vertical</div>
+              </div>
+            ))}
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#platform" className="text-slate-600 hover:text-cyan-600 font-medium transition-colors">Platform</a>
-            <a href="#methodology" className="text-slate-600 hover:text-cyan-600 font-medium transition-colors">How It Works</a>
-            <a href="#outcomes" className="text-slate-600 hover:text-cyan-600 font-medium transition-colors">Outcomes</a>
-            <button className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all">
-              Request Demo
-            </button>
+        </div>
+
+        {/* ── SVG orbital rings beneath the prism ── */}
+        <div style={{ position:"absolute", top:FH + 40, left:"50%", transform:"translateX(-50%)", pointerEvents:"none" }}>
+          <svg width={750} height={280} viewBox="-375 -60 750 280" style={{ overflow:"visible" }}>
+            <defs>
+              {RINGS.map((ring, i) => (
+                <filter key={`glow${i}`} id={`glow${i}`}>
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              ))}
+            </defs>
+
+            {RINGS.map((ring, i) => {
+              const rx = ring.r;
+              const ry = rx * 0.28;
+              const opacity = 0.75 - i * 0.1;
+              const dashLen = Math.PI * (3*(rx+ry) - Math.sqrt((3*rx+ry)*(rx+3*ry)));
+              return (
+                <g key={ring.label}>
+                  {/* Ring ellipse */}
+                  <ellipse
+                    cx={0} cy={i * 52 + 10}
+                    rx={rx} ry={ry}
+                    fill="none"
+                    stroke="#DC2626"
+                    strokeWidth={1.5}
+                    strokeOpacity={opacity}
+                    filter={`url(#glow${i})`}
+                    strokeDasharray={`${dashLen * 0.15} ${dashLen * 0.85}`}
+                    style={{
+                      animation:`orbit${i} ${6 + i*1.5}s linear infinite`,
+                    }}
+                  />
+                  {/* Solid ring */}
+                  <ellipse
+                    cx={0} cy={i * 52 + 10}
+                    rx={rx} ry={ry}
+                    fill="none"
+                    stroke="#991B1B"
+                    strokeWidth={0.8}
+                    strokeOpacity={opacity * 0.5}
+                  />
+                  {/* Label on right side */}
+                  <text
+                    x={rx + 10} y={i * 52 + 14}
+                    fill="#FCA5A5"
+                    fontSize={11}
+                    fontWeight="700"
+                    letterSpacing="0.06em"
+                    fontFamily="DM Sans, system-ui"
+                    opacity={opacity}
+                  >
+                    {ring.label}
+                  </text>
+                  {/* Label dot */}
+                  <circle cx={rx + 5} cy={i * 52 + 11} r={3} fill="#DC2626" opacity={opacity} />
+                  {/* Left mirror label */}
+                  <text
+                    x={-rx - 12} y={i * 52 + 14}
+                    fill="#FCA5A5"
+                    fontSize={11}
+                    fontWeight="700"
+                    letterSpacing="0.06em"
+                    fontFamily="DM Sans, system-ui"
+                    textAnchor="end"
+                    opacity={opacity * 0.5}
+                  >
+                    {ring.label}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+
+        {/* Central platform label below rings */}
+        <div style={{
+          position:"absolute",
+          top:FH + 310,
+          left:"50%", transform:"translateX(-50%)",
+          textAlign:"center",
+          width:340,
+        }}>
+          <div style={{ fontSize:11, fontWeight:700, color:"#EF4444", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:6 }}>
+            Universal Intelligence Layer
           </div>
+          <div style={{ fontSize:13, color:"#475569", lineHeight:1.6 }}>
+            One platform. Every vertical. Governed, explainable, continuously learning.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── SECTION IMAGE ────────────────────────────────────────────────────────────
+function SectionImg({ src, alt, height = 280, radius = 20 }: { src:string; alt:string; height?:number; radius?:number }) {
+  return (
+    <div style={{ borderRadius:radius, overflow:"hidden", border:"1px solid rgba(255,255,255,0.07)", boxShadow:"0 24px 80px rgba(0,0,0,0.5)" }}>
+      <img src={src} alt={alt} style={{ width:"100%", height, objectFit:"cover", display:"block", filter:"brightness(0.85) saturate(1.2)" }} />
+    </div>
+  );
+}
+
+// ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
+export default function AuctusAIWebsite() {
+  const [activePillar, setActivePillar] = useState(0);
+
+  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
+
+  return (
+    <div style={{ fontFamily:"'DM Sans', system-ui, sans-serif", background:"#060B18", color:"#E2E8F0", overflowX:"hidden" }}>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;0,9..40,800;1,9..40,400&family=Sora:wght@700;800&display=swap');
+        *{box-sizing:border-box;margin:0;padding:0;}
+        html{scroll-behavior:smooth;}
+        ::selection{background:#0EA5E9;color:#fff;}
+        .gt{background:linear-gradient(135deg,#0EA5E9 0%,#818CF8 60%,#EC4899 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+        .glass{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:18px;backdrop-filter:blur(12px);transition:all .3s;}
+        .glass:hover{background:rgba(255,255,255,0.055);border-color:rgba(14,165,233,0.3);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+        .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+        .btn-p{background:linear-gradient(135deg,#0EA5E9,#6366F1);color:#fff;border:none;cursor:pointer;font-weight:700;border-radius:10px;transition:all .25s;font-family:inherit;}
+        .btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(14,165,233,0.4);}
+        .btn-g{background:transparent;border:1.5px solid rgba(255,255,255,0.15);color:#E2E8F0;cursor:pointer;font-weight:600;border-radius:10px;transition:all .25s;font-family:inherit;}
+        .btn-g:hover{border-color:#0EA5E9;color:#0EA5E9;}
+        .nl{color:#94A3B8;font-size:14px;font-weight:500;cursor:pointer;transition:color .2s;text-decoration:none;background:none;border:none;padding:0;}
+        .nl:hover{color:#0EA5E9;}
+        .grid-bg{background-image:linear-gradient(rgba(14,165,233,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(14,165,233,0.03) 1px,transparent 1px);background-size:60px 60px;}
+        .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(14,165,233,0.25),transparent);max-width:700px;margin:0 auto;}
+        .pt{padding:4px 12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;border:1.5px solid transparent;}
+        .pt:not(.active){color:#64748B;border-color:rgba(255,255,255,0.06);}
+        .pt:not(.active):hover{color:#94A3B8;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        .fade-up{animation:fadeUp .7s ease forwards;}
+      `}</style>
+
+      {/* ══ NAV ══════════════════════════════════════════════════════════════════ */}
+      <nav style={{ position:"fixed",top:0,left:0,right:0,zIndex:100,padding:"0 24px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(6,11,24,0.9)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ display:"flex",alignItems:"center",gap:10 }}>
+          <div style={{ width:34,height:34,borderRadius:9,background:"linear-gradient(135deg,#0EA5E9,#6366F1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18 }}>⚡</div>
+          <div>
+            <div style={{ fontFamily:"Sora,sans-serif",fontWeight:800,fontSize:17,letterSpacing:"-0.02em",color:"#F1F5F9" }}>AuctusAI</div>
+            <div style={{ fontSize:9,color:"#475569",letterSpacing:".1em",textTransform:"uppercase",marginTop:-2 }}>CS Pulse Platform</div>
+          </div>
+        </div>
+        <div style={{ display:"flex",alignItems:"center",gap:28 }}>
+          {["Platform","Verticals","Pipeline","Revenue Intel"].map((l,i) => (
+            <button key={l} className="nl" onClick={()=>scrollTo(["platform","verticals","how-it-works","rev-intel"][i])}>{l}</button>
+          ))}
+        </div>
+        <div style={{ display:"flex",gap:10 }}>
+          <button className="btn-g" style={{ padding:"8px 18px",fontSize:13 }} onClick={()=>scrollTo("contact")}>Sign In</button>
+          <button className="btn-p" style={{ padding:"9px 22px",fontSize:13 }} onClick={()=>scrollTo("contact")}>Request Demo</button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="inline-block px-4 py-1.5 bg-cyan-100 text-cyan-700 rounded-full text-sm font-semibold">
-                Self-Learning AI • Human-Validated Intelligence
-              </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
-                Customer Success Intelligence That
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">
-                  {' '}Gets Smarter Every Day
-                </span>
-              </h1>
-              <p className="text-xl text-slate-600 leading-relaxed">
-                CS Pulse combines AI-powered analytics with continuous learning to identify revenue risk and expansion opportunities in your customer base—validated by your team's expertise.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-2">
-                  Request Demo <ArrowRight className="w-5 h-5" />
-                </button>
-                <button className="px-8 py-4 bg-white border-2 border-slate-300 text-slate-700 rounded-xl font-bold text-lg hover:border-cyan-500 hover:text-cyan-600 transition-all">
-                  See ROI Analysis
-                </button>
-              </div>
-              <div className="flex items-center gap-8 pt-4 border-t border-slate-200 mt-6">
-                <div className="flex items-center gap-2">
-                  <RefreshCw className="w-5 h-5 text-cyan-600" />
-                  <span className="text-sm text-slate-600 font-medium">Continuous learning</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-cyan-600" />
-                  <span className="text-sm text-slate-600 font-medium">Human oversight</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <GitBranch className="w-5 h-5 text-cyan-600" />
-                  <span className="text-sm text-slate-600 font-medium">Adaptive models</span>
-                </div>
-              </div>
-            </div>
-            
-            {/* Hero Visual */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-3xl blur-3xl opacity-20 animate-pulse"></div>
-              <div className="relative bg-white rounded-2xl p-8 shadow-2xl border border-slate-200">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-slate-500">Health Score Dashboard</span>
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl border border-green-200">
-                      <div className="text-2xl font-bold text-green-700">94</div>
-                      <div className="text-xs text-green-600 font-medium">Healthy Accounts</div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-50 to-orange-50 p-4 rounded-xl border border-red-200">
-                      <div className="text-2xl font-bold text-red-700">12</div>
-                      <div className="text-xs text-red-600 font-medium">At-Risk Accounts</div>
-                    </div>
-                  </div>
+      {/* ══ HERO ═════════════════════════════════════════════════════════════════ */}
+      <section style={{ paddingTop:60,position:"relative",overflow:"hidden" }} className="grid-bg" id="verticals">
 
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm font-medium text-slate-700">Acme Corp</span>
-                      </div>
-                      <span className="text-sm font-bold text-red-600">78% churn risk</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-sm font-medium text-slate-700">TechStart Inc</span>
-                      </div>
-                      <span className="text-sm font-bold text-green-600">89% expansion</span>
-                    </div>
-                    <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                        <span className="text-sm font-medium text-slate-700">Global Systems</span>
-                      </div>
-                      <span className="text-sm font-bold text-yellow-600">Monitor closely</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Glow */}
+        <div style={{ position:"absolute",top:"10%",left:"50%",transform:"translateX(-50%)",width:800,height:800,borderRadius:"50%",background:"radial-gradient(circle,rgba(14,165,233,0.08) 0%,transparent 65%)",pointerEvents:"none" }} />
+
+        <div style={{ maxWidth:1100,margin:"0 auto",padding:"60px 24px 0",textAlign:"center" }}>
+          <div className="pill fade-up" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:20 }}>
+            <span style={{ width:6,height:6,borderRadius:"50%",background:"#38BDF8",display:"inline-block" }} />
+            Multi-Vertical · Self-Learning · Human-Governed AI
           </div>
+          <h1 className="fade-up" style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(38px,4.5vw,64px)",fontWeight:800,lineHeight:1.08,letterSpacing:"-0.03em",marginBottom:20 }}>
+            One Intelligence Platform.<br />
+            <span className="gt">Every Customer Vertical.</span>
+          </h1>
+          <p className="fade-up" style={{ fontSize:18,color:"#64748B",maxWidth:560,margin:"0 auto 16px",lineHeight:1.7 }}>
+            CS Pulse delivers revenue intelligence, AI-governed playbooks, and explainable health scoring — purpose-built for each industry vertical on a single adaptive platform.
+          </p>
         </div>
+
+        {/* 3D Hexagonal Prism — the hero visual */}
+        <HexPrism />
       </section>
 
-      {/* Stats Bar */}
-      <section className="py-12 bg-gradient-to-r from-cyan-600 to-blue-700">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      {/* ══ STATS BAR ════════════════════════════════════════════════════════════ */}
+      <div style={{ background:"rgba(255,255,255,0.02)",borderTop:"1px solid rgba(255,255,255,0.05)",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"28px 24px" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:24 }}>
+          {[["5-Pillar","Health Framework"],["3","AI Wizards  A·B·C"],["33","KPIs Per Account"],["Revenue\nIntel","Monthly Scoring"],["Qdrant +\nPostgres","Dual-DB AI Layer"]].map(([val,lbl])=>(
+            <div key={lbl} style={{ textAlign:"center" }}>
+              <div style={{ fontFamily:"Sora,sans-serif",fontSize:26,fontWeight:800,color:"#F1F5F9",letterSpacing:"-0.02em",whiteSpace:"pre-line",lineHeight:1.2 }}>{val}</div>
+              <div style={{ fontSize:12,color:"#475569",marginTop:4,whiteSpace:"pre-line" }}>{lbl}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ══ PLATFORM FEATURES ════════════════════════════════════════════════════ */}
+      <section id="platform" style={{ padding:"90px 24px" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:70 }}>
             <div>
-              <div className="text-4xl font-bold text-white">78-84%</div>
-              <div className="text-cyan-100 mt-1">Churn Prediction Accuracy</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white">90-180</div>
-              <div className="text-cyan-100 mt-1">Days Early Warning</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white">59</div>
-              <div className="text-cyan-100 mt-1">KPIs Analyzed</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-white">15-20%</div>
-              <div className="text-cyan-100 mt-1">Improvement Over Time</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Continuous Learning Methodology */}
-      <section id="methodology" className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              AI That Learns From Your Business
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              CS Pulse doesn't just analyze data—it continuously adapts to your customer patterns, validated by your team's expertise.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-white rounded-2xl p-8 border-2 border-slate-200 shadow-lg">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center mb-6">
-                <Brain className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">1. AI Analysis</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Machine learning models analyze 59 KPIs across 5 pillars to detect patterns, predict outcomes, and surface insights your team might miss.
+              <div className="pill" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:16 }}>Platform Capabilities</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>
+                Full-Stack<br /><span className="gt">Intelligence Layer</span>
+              </h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>
+                From synthetic data generation to agentic signal analysis and playbook orchestration — CS Pulse covers the entire customer success lifecycle with explainable, auditable AI.
               </p>
             </div>
-
-            <div className="bg-white rounded-2xl p-8 border-2 border-slate-200 shadow-lg">
-              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6">
-                <Users className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">2. Human Validation</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Your CSMs review AI predictions, mark false positives, and validate outcomes. This feedback loop ensures accuracy improves with every interaction.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 border-2 border-slate-200 shadow-lg">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-6">
-                <RefreshCw className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">3. Continuous Improvement</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Models retrain quarterly on validated outcomes. Prediction accuracy typically improves 15-20% over first 12 months as the system learns your specific patterns.
-              </p>
-            </div>
+            {/* Data center image */}
+            <SectionImg
+              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80"
+              alt="Enterprise data center server racks"
+              height={260}
+            />
           </div>
 
-          <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-8 border-2 border-blue-200">
-            <div className="flex items-start gap-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Target className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-3">The Result: Adaptive Intelligence</h3>
-                <p className="text-slate-700 leading-relaxed mb-4">
-                  Unlike static rules or one-time ML models, CS Pulse evolves with your business. As your product changes, customer behavior shifts, and market conditions evolve, the AI adapts—always validated by your team's domain expertise.
-                </p>
-                <div className="grid md:grid-cols-2 gap-4 mt-6">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                    <span className="text-sm text-slate-700">Month 1: Baseline accuracy 65-70%</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                    <span className="text-sm text-slate-700">Month 3: Improved to 72-76% with validation</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                    <span className="text-sm text-slate-700">Month 6: Reaches 78-82% as patterns solidify</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-1" />
-                    <span className="text-sm text-slate-700">Month 12+: Stabilizes at 78-84% accuracy</span>
-                  </div>
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:18 }}>
+            {FEATURES.map(f=>(
+              <div key={f.title} className="glass" style={{ padding:"26px" }}>
+                <div style={{ display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:14 }}>
+                  <div style={{ fontSize:32 }}>{f.icon}</div>
+                  <div className="pill" style={{ background:`${f.tagColor}18`,color:f.tagColor,border:`1px solid ${f.tagColor}33` }}>{f.tag}</div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section id="platform" className="py-20 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              Platform Capabilities
-            </h2>
-            <p className="text-xl text-slate-600">
-              59 KPIs. 5 Pillars. Continuous Learning. Human Oversight.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="group bg-gradient-to-br from-slate-50 to-blue-50 p-8 rounded-2xl border-2 border-slate-200 hover:border-cyan-400 transition-all hover:shadow-xl">
-              <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <TrendingUp className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Churn Risk Detection</h3>
-              <p className="text-slate-600 leading-relaxed">
-                ML models analyze customer behavior patterns to flag accounts at risk 90-180 days before potential churn. Accuracy improves as your CSMs validate predictions.
-              </p>
-            </div>
-
-            <div className="group bg-gradient-to-br from-slate-50 to-green-50 p-8 rounded-2xl border-2 border-slate-200 hover:border-green-400 transition-all hover:shadow-xl">
-              <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Target className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Expansion Opportunity Identification</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Automatically surfaces accounts showing signals of readiness to expand based on usage growth, engagement patterns, and business milestone achievements.
-              </p>
-            </div>
-
-            <div className="group bg-gradient-to-br from-slate-50 to-orange-50 p-8 rounded-2xl border-2 border-slate-200 hover:border-orange-400 transition-all hover:shadow-xl">
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Zap className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Automated Playbook Triggers</h3>
-              <p className="text-slate-600 leading-relaxed">
-                When health scores cross defined thresholds, proven intervention playbooks activate automatically—reviewed and refined by your team for optimal results.
-              </p>
-            </div>
-
-            <div className="group bg-gradient-to-br from-slate-50 to-purple-50 p-8 rounded-2xl border-2 border-slate-200 hover:border-purple-400 transition-all hover:shadow-xl">
-              <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <BarChart3 className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">5-Pillar Health Framework</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Track customer health across Product Usage, Support Efficiency, Business Value, Relationship Quality, and Financial Health with customizable weighting.
-              </p>
-            </div>
-
-            <div className="group bg-gradient-to-br from-slate-50 to-indigo-50 p-8 rounded-2xl border-2 border-slate-200 hover:border-indigo-400 transition-all hover:shadow-xl">
-              <div className="w-14 h-14 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Users className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">CSM Workflow Optimization</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Actionable dashboards prioritize CSM activities by risk level and revenue potential, reducing time spent on data analysis by an average of 40-45 hours monthly.
-              </p>
-            </div>
-
-            <div className="group bg-gradient-to-br from-slate-50 to-cyan-50 p-8 rounded-2xl border-2 border-slate-200 hover:border-cyan-400 transition-all hover:shadow-xl">
-              <div className="w-14 h-14 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Brain className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Explainable AI Insights</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Models provide clear explanations for predictions, showing which KPIs drove each risk assessment and recommended actions—enabling human validation and trust.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Outcomes - Conservative */}
-      <section id="outcomes" className="py-20 px-6 bg-gradient-to-br from-slate-900 to-blue-900 text-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Expected Outcomes</h2>
-            <p className="text-xl text-blue-200">
-              Based on  customer deployments with $10M-$500M ARR
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 items-start">
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-2xl font-bold mb-6">Revenue Impact Potential</h3>
-                <p className="text-blue-200 mb-6">
-                  Actual results vary by customer size, industry, and CS maturity. These ranges represent observed outcomes across early deployments:
-                </p>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-7 h-7 text-cyan-400" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold mb-2">Churn Reduction</h4>
-                  <p className="text-blue-200 mb-2">
-                    Customers typically prevent 10-20% of at-risk accounts from churning by detecting issues 90-180 days earlier than manual monitoring.
-                  </p>
-                  <div className="text-sm text-blue-300 italic">
-                    Example: For $20M ARR with 20% baseline churn, preventing 15% of churn = $600K protected annually
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Target className="w-7 h-7 text-green-400" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold mb-2">Expansion Revenue</h4>
-                  <p className="text-blue-200 mb-2">
-                    Expansion opportunity identification surfaces 2-3x more qualified leads compared to manual account reviews, with 30-40% conversion rates.
-                  </p>
-                  <div className="text-sm text-blue-300 italic">
-                    Example: 25 expansion opportunities × 35% close rate × $50K avg deal = $437K incremental revenue
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Users className="w-7 h-7 text-purple-400" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold mb-2">CSM Productivity</h4>
-                  <p className="text-blue-200 mb-2">
-                    Automation of data analysis and reporting saves 40-45 hours per CSM monthly, allowing focus on high-value customer interactions.
-                  </p>
-                  <div className="text-sm text-blue-300 italic">
-                    Example: 20 CSMs × 43 hours/month × $75/hour = $64.5K monthly in realized efficiency
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 mt-8">
-                <h4 className="font-semibold mb-3">Cost Considerations</h4>
-                <ul className="space-y-2 text-sm text-blue-200">
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400">•</span>
-                    <span>Platform licensing varies by account volume and feature set</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400">•</span>
-                    <span>4-6 week implementation with data integration support</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400">•</span>
-                    <span>Ongoing CSM training and playbook optimization included</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-cyan-400">•</span>
-                    <span>ROI typically realized within 3-6 months of deployment</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-              <h3 className="text-2xl font-bold mb-6">ROI Framework</h3>
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-blue-200 mb-2">Your Annual ARR</label>
-                  <input 
-                    type="text" 
-                    defaultValue="$20,000,000"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:border-cyan-400"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-200 mb-2">Current Gross Churn Rate</label>
-                  <input 
-                    type="text" 
-                    defaultValue="20%"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:border-cyan-400"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-blue-200 mb-2">Number of CSMs</label>
-                  <input 
-                    type="text" 
-                    defaultValue="20"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:border-cyan-400"
-                  />
-                </div>
-                
-                <div className="pt-6 border-t border-white/20 space-y-4">
-                  <div>
-                    <div className="text-sm font-medium text-blue-200 mb-1">Conservative Estimate (Year 1)</div>
-                    <div className="text-3xl font-bold text-green-400">$1.0M - $1.5M</div>
-                    <div className="text-xs text-blue-300 mt-1">
-                      Churn reduction + Expansion + CSM efficiency
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-blue-200 mb-1">Optimistic Estimate (Year 1)</div>
-                    <div className="text-3xl font-bold text-cyan-400">$2.5M - $4.0M</div>
-                    <div className="text-xs text-blue-300 mt-1">
-                      Higher save rates + accelerated expansion
-                    </div>
-                  </div>
-                  <div className="bg-orange-500/20 rounded-lg p-4 mt-4">
-                    <div className="text-sm font-semibold text-orange-300 mb-2">Contact for detailed ROI analysis</div>
-                    <div className="text-xs text-blue-200">
-                      We'll model your specific situation including current churn patterns, expansion potential, and team efficiency gains.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing - Contact Based */}
-      <section id="pricing" className="py-20 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              Pricing Tailored to Your Business
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              CS Pulse pricing is based on your customer volume, feature requirements, and deployment model. We'll design a package that delivers measurable ROI for your specific situation.
-            </p>
-          </div>
-
-          <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl p-10 border-2 border-blue-200">
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-6">What Influences Pricing</h3>
-                <ul className="space-y-4">
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-white text-xs font-bold">1</span>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-900 mb-1">Customer Account Volume</div>
-                      <div className="text-sm text-slate-600">Pricing scales with number of accounts monitored (50, 150, 500, or unlimited)</div>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-white text-xs font-bold">2</span>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-900 mb-1">Feature Set</div>
-                      <div className="text-sm text-slate-600">Core health monitoring, expansion detection, automated playbooks, or full AI suite</div>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-white text-xs font-bold">3</span>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-900 mb-1">Integration Complexity</div>
-                      <div className="text-sm text-slate-600">Number of data sources, custom connectors, and real-time sync requirements</div>
-                    </div>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-white text-xs font-bold">4</span>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-900 mb-1">Support & Service Level</div>
-                      <div className="text-sm text-slate-600">Email support, dedicated CSM, SLA guarantees, or white-glove implementation</div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="bg-white rounded-xl p-8 border-2 border-cyan-200">
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">Request Custom Pricing</h3>
-                <p className="text-slate-600 mb-6">
-                  Share your details and we'll provide a detailed ROI analysis and pricing proposal tailored to your business.
-                </p>
-                <form className="space-y-4">
-                  <input 
-                    type="text" 
-                    placeholder="Company Name" 
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-cyan-400"
-                  />
-                  <input 
-                    type="email" 
-                    placeholder="Work Email" 
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-cyan-400"
-                  />
-                  <input 
-                    type="text" 
-                    placeholder="Annual ARR" 
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-cyan-400"
-                  />
-                  <input 
-                    type="text" 
-                    placeholder="Number of Customer Accounts" 
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-cyan-400"
-                  />
-                  <button className="w-full py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold text-lg hover:shadow-xl transition-all">
-                    Get Custom Pricing
-                  </button>
-                </form>
-                <div className="mt-4 text-center text-sm text-slate-500">
-                  Or schedule a demo: <a href="mailto:sales@auctusai.ai" className="text-cyan-600 hover:underline">sales@auctusai.ai</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-12 grid md:grid-cols-3 gap-6">
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900 mb-2">4-6 Weeks</div>
-                <div className="text-slate-600">Average implementation time</div>
-              </div>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900 mb-2">3-6 Months</div>
-                <div className="text-slate-600">Typical time to ROI realization</div>
-              </div>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-slate-900 mb-2">Annual</div>
-                <div className="text-slate-600">Flexible billing terms available</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="py-20 px-6 bg-slate-50">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
-              Frequently Asked Questions
-            </h2>
-          </div>
-
-          <div className="space-y-4">
-            {[
-              {
-                q: "How does the AI model improve over time?",
-                a: "CS Pulse uses a continuous learning approach where your CSMs validate predictions (marking false positives/negatives) and confirm actual outcomes (churn, expansion, renewal). Every quarter, models retrain on this validated data, improving accuracy typically 15-20% over the first 12 months. You see baseline 65-70% accuracy in month 1, reaching 78-84% by month 12 as the system learns your specific customer patterns."
-              },
-              {
-                q: "What does 'human-in-the-loop' mean in practice?",
-                a: "The AI flags at-risk accounts and expansion opportunities, but your CSMs review each prediction before action. They can mark predictions as accurate or false alarms, add context the AI missed, and override recommendations when they have information the model doesn't. This validation feedback loop both improves model accuracy and ensures your team maintains control over customer relationships."
-              },
-              {
-                q: "How accurate are the churn predictions?",
-                a: "Churn prediction accuracy varies by customer based on data quality, business model complexity, and time since deployment. Initial models achieve 65-70% accuracy, improving to 78-84% after 12 months of human validation and retraining. We provide precision/recall metrics in your dashboard so you can calibrate trust levels and optimize intervention thresholds."
-              },
-              {
-                q: "What data sources does CS Pulse integrate with?",
-                a: "CS Pulse connects to your CRM (Salesforce, HubSpot), support systems (Zendesk, Intercom), product analytics (Mixpanel, Amplitude), billing platforms (Stripe, Chargebee), and communication tools (Slack, email). Implementation typically takes 4-6 weeks including data validation and initial model training."
-              },
-              {
-                q: "How do you calculate ROI?",
-                a: "We model ROI based on three validated components: (1) Churn reduction - accounts saved × average ARR × gross margin, (2) Expansion revenue - opportunities surfaced × close rate × average deal size, (3) CSM productivity - hours saved × loaded hourly cost. Actual results vary by company size and CS maturity. We provide a detailed ROI analysis during sales conversations using your specific metrics."
-              },
-              {
-                q: "Can I customize the health scoring model?",
-                a: "Yes. While we provide a proven 5-pillar framework with 59 KPIs, you can adjust pillar weights, add custom KPIs specific to your business, and set threshold levels for alerts. The AI learns which factors are most predictive for your customers and surfaces these insights in quarterly model reviews."
-              }
-            ].map((faq, idx) => (
-              <div key={idx} className="bg-white rounded-xl border-2 border-slate-200 overflow-hidden">
-                <button
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors"
-                >
-                  <span className="font-semibold text-slate-900 pr-4">{faq.q}</span>
-                  <ChevronDown className={`w-5 h-5 text-slate-500 flex-shrink-0 transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
-                </button>
-                {openFaq === idx && (
-                  <div className="px-6 pb-4 text-slate-600 leading-relaxed">
-                    {faq.a}
-                  </div>
-                )}
+                <h3 style={{ fontSize:16,fontWeight:700,color:"#F1F5F9",marginBottom:8,fontFamily:"Sora,sans-serif" }}>{f.title}</h3>
+                <p style={{ fontSize:13,color:"#64748B",lineHeight:1.7 }}>{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20 px-6 bg-gradient-to-r from-cyan-600 to-blue-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to See CS Pulse in Action?
-          </h2>
-          <p className="text-xl text-cyan-100 mb-8 max-w-2xl mx-auto">
-            Schedule a personalized demo to see how our AI-powered platform can help predict churn, identify expansion opportunities, and transform your customer success operation.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-10 py-5 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all">
-              Request Demo
-            </button>
-            <button className="px-10 py-5 bg-white text-cyan-600 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all">
-              Get Custom ROI Analysis
-            </button>
+      <div className="divider" />
+
+      {/* ══ 5-PILLAR MODEL ═══════════════════════════════════════════════════════ */}
+      <section id="pillars" style={{ padding:"90px 24px" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:50 }}>
+            <div>
+              <div className="pill" style={{ background:"rgba(99,102,241,0.1)",color:"#818CF8",border:"1px solid rgba(99,102,241,0.2)",marginBottom:16 }}>5-Pillar Framework</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>
+                Built for<br /><span className="gt">Datacenter Vertical</span>
+              </h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>
+                Each pillar has configurable L1/L2 weights. Wizard C recalibrates them monthly from your actual churn and expansion outcomes — not a generic SaaS benchmark.
+              </p>
+            </div>
+            <SectionImg
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
+              alt="AI analytics visualization"
+              height={240}
+            />
           </div>
-          <div className="mt-8 text-cyan-100">
-            4-6 week implementation • Quarterly model retraining • Validated results
+
+          {/* Tabs */}
+          <div style={{ display:"flex",gap:8,justifyContent:"center",marginBottom:28,flexWrap:"wrap" }}>
+            {PILLARS.map((p,i)=>(
+              <button key={p.id} className={`pt${activePillar===i?" active":""}`}
+                style={ activePillar===i ? {background:p.color,color:"#fff",border:`1.5px solid ${p.color}`} : {} }
+                onClick={()=>setActivePillar(i)}>
+                {p.id} · {p.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Detail */}
+          <div style={{ background:"rgba(255,255,255,0.03)",border:`1px solid ${PILLARS[activePillar].color}33`,borderRadius:18,padding:"36px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:36,alignItems:"center" }}>
+            <div>
+              <div style={{ display:"flex",alignItems:"center",gap:14,marginBottom:20 }}>
+                <div style={{ width:50,height:50,borderRadius:13,background:PILLARS[activePillar].color+"22",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,fontWeight:800,color:PILLARS[activePillar].color }}>
+                  {PILLARS[activePillar].id}
+                </div>
+                <div>
+                  <div style={{ fontSize:20,fontWeight:700,color:"#F1F5F9",fontFamily:"Sora,sans-serif" }}>{PILLARS[activePillar].name}</div>
+                  <div style={{ fontSize:12,color:"#64748B" }}>Default weight: <span style={{ color:PILLARS[activePillar].color,fontWeight:700 }}>{PILLARS[activePillar].weight}</span> · Auto-recalibrates monthly</div>
+                </div>
+              </div>
+              <div style={{ fontSize:13,color:"#475569",padding:"12px 16px",background:"rgba(255,255,255,0.03)",borderRadius:10,border:"1px solid rgba(255,255,255,0.06)" }}>
+                💡 Default weights are starting points. After 90 days of data, Wizard C learns the optimal weight for your portfolio.
+              </div>
+            </div>
+            <div style={{ display:"flex",flexDirection:"column",gap:9 }}>
+              {PILLARS[activePillar].kpis.map((kpi,ki)=>(
+                <div key={kpi} style={{ display:"flex",alignItems:"center",gap:12,padding:"13px 16px",background:"rgba(255,255,255,0.03)",borderRadius:11,border:"1px solid rgba(255,255,255,0.05)" }}>
+                  <div style={{ width:26,height:26,borderRadius:7,background:PILLARS[activePillar].color+"22",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:800,color:PILLARS[activePillar].color }}>K{ki+1}</div>
+                  <span style={{ fontSize:13,color:"#CBD5E1",fontWeight:500 }}>{kpi}</span>
+                  <div style={{ marginLeft:"auto",height:3,width:50,background:"#1E293B",borderRadius:999 }}>
+                    <div style={{ height:"100%",width:`${55+ki*12}%`,background:PILLARS[activePillar].color,borderRadius:999 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Weight bar */}
+          <div style={{ marginTop:20,padding:"18px 22px",background:"rgba(255,255,255,0.02)",borderRadius:13,border:"1px solid rgba(255,255,255,0.05)" }}>
+            <div style={{ fontSize:10,color:"#475569",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:10 }}>Portfolio Health Score Composition</div>
+            <div style={{ display:"flex",height:28,borderRadius:8,overflow:"hidden",gap:2 }}>
+              {PILLARS.map(p=>(
+                <div key={p.id} style={{ flex:parseInt(p.weight),background:p.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.9)",whiteSpace:"nowrap",overflow:"hidden" }}>
+                  {p.id} {p.weight}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+      <div className="divider" />
+
+      {/* ══ PIPELINE / HOW IT WORKS ══════════════════════════════════════════════ */}
+      <section id="how-it-works" style={{ padding:"90px 24px",background:"rgba(255,255,255,0.01)" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:60 }}>
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-                  <Brain className="w-5 h-5 text-white" />
-                </div>
-                <span className="font-bold text-white">AuctusAI</span>
+              <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",marginBottom:16 }}>End-to-End Pipeline</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>
+                Raw CSV to<br /><span className="gt">Intelligent Action</span>
+              </h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>Six automated steps. Human-validated at every milestone. No manual script running — the API orchestrates everything on onboarding.</p>
+            </div>
+            <SectionImg
+              src="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80"
+              alt="AI data pipeline workflow"
+              height={240}
+            />
+          </div>
+
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:18 }}>
+            {[
+              {n:"01",t:"Provision & Ingest",d:"Upload 6 CSV files via the browser wizard. API validates schema, loads data into PostgreSQL, creates Qdrant embeddings — one step.",c:"#0EA5E9"},
+              {n:"02",t:"Wizard A — Journey Generator",d:"Transforms raw CSV into account journey timelines: events, milestones, 12-month health arcs. Context for the Signal Analyst to reason over.",c:"#8B5CF6"},
+              {n:"03",t:"Wizard B — Pattern Analyzer",d:"Detects Proactive Growth, Churn Risk, and Recovery trajectories. Auto-generates early warning rules and success factors.",c:"#F59E0B"},
+              {n:"04",t:"Wizard C — Weight Optimizer",d:"Learns which KPIs and pillars actually predict outcomes in your data. L1/L2 weights recalibrate monthly — accuracy compounds over time.",c:"#10B981"},
+              {n:"05",t:"Signal Analyst Agent",d:"AI agent runs on each account: KPI data from PostgreSQL + qualitative signals from Qdrant → natural-language health recommendation + playbook trigger.",c:"#EF4444"},
+              {n:"06",t:"Revenue Intelligence Reviews",d:"Monthly portfolio review. Every account must show forward movement. Stagnant accounts auto-escalate to a named playbook with CSM owner and date.",c:"#6366F1"},
+            ].map(s=>(
+              <div key={s.n} className="glass" style={{ padding:"24px" }}>
+                <div style={{ width:40,height:40,borderRadius:11,background:s.c+"22",border:`1.5px solid ${s.c}55`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"Sora,sans-serif",fontSize:13,fontWeight:800,color:s.c,marginBottom:14 }}>{s.n}</div>
+                <h3 style={{ fontSize:15,fontWeight:700,color:"#F1F5F9",marginBottom:8,fontFamily:"Sora,sans-serif" }}>{s.t}</h3>
+                <p style={{ fontSize:13,color:"#64748B",lineHeight:1.65 }}>{s.d}</p>
               </div>
-              <p className="text-sm">
-                AI-powered customer success platform for revenue growth and retention.
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ══ REVENUE INTELLIGENCE ═════════════════════════════════════════════════ */}
+      <section id="rev-intel" style={{ padding:"90px 24px" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1.1fr 1fr",gap:60,alignItems:"center" }}>
+            <div>
+              <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",marginBottom:20 }}>Revenue Intelligence</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:20 }}>
+                Every Account.<br />Every Month.<br /><span className="gt">Forward.</span>
+              </h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75,marginBottom:28 }}>
+                Revenue Intelligence replaces lagging vanity metrics with a compounding improvement cadence. Each account is scored, tracked, and acted on monthly — with full explainability into which pillar and which KPI drove the change.
               </p>
+
+              {/* Compounding table */}
+              <div style={{ borderRadius:14,overflow:"hidden",border:"1px solid rgba(255,255,255,0.07)" }}>
+                <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",background:"rgba(255,255,255,0.04)",padding:"10px 16px" }}>
+                  {["Period","Monthly Signal","Portfolio Outcome"].map(h=>(
+                    <div key={h} style={{ fontSize:10,fontWeight:700,color:"#475569",textTransform:"uppercase",letterSpacing:".06em" }}>{h}</div>
+                  ))}
+                </div>
+                {[
+                  ["Month 1","Baseline set","Reference: 72 avg health"],
+                  ["Month 2","+1pt / account","73 → stabilizing"],
+                  ["Month 4","Compounding","75–76 avg"],
+                  ["Month 6","Momentum builds","78–79 avg"],
+                  ["Month 12","~12.7% compounded","82 avg · ARR protected"],
+                ].map(([p,g,o],i)=>(
+                  <div key={p} style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",padding:"11px 16px",background:i%2===0?"transparent":"rgba(255,255,255,0.02)",borderTop:"1px solid rgba(255,255,255,0.04)" }}>
+                    <div style={{ fontSize:13,fontWeight:600,color:"#CBD5E1" }}>{p}</div>
+                    <div style={{ fontSize:13,color:"#10B981",fontWeight:600 }}>{g}</div>
+                    <div style={{ fontSize:12,color:"#475569" }}>{o}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Product</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#features" className="hover:text-cyan-400 transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-cyan-400 transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Integrations</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Security</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Company</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Contact</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Documentation</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">API Reference</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Case Studies</a></li>
-                <li><a href="#" className="hover:text-cyan-400 transition-colors">Support</a></li>
-              </ul>
+
+            <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
+              <SectionImg
+                src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80"
+                alt="Revenue growth analytics dashboard"
+                height={220}
+              />
+              {[
+                ["📌","Zero-exception rule","No account is exempt. Zero movement = must be on a named playbook with CSM owner + resolution date.","#0EA5E9"],
+                ["🔄","Wizard C recalibrates monthly","Health weights adjust from your outcomes — not a generic benchmark. The model earns accuracy.","#8B5CF6"],
+                ["🎯","Full playbook accountability","Every critical account: named playbook, P1/P2/P3 severity, assigned CSM, target date. No account falls through.","#F59E0B"],
+              ].map(([icon,title,desc,color])=>(
+                <div key={title as string} className="glass" style={{ padding:"18px 22px",display:"flex",gap:14 }}>
+                  <div style={{ fontSize:22,flexShrink:0 }}>{icon}</div>
+                  <div>
+                    <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9",marginBottom:5 }}>{title as string}</div>
+                    <div style={{ fontSize:13,color:"#64748B",lineHeight:1.6 }}>{desc as string}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="pt-8 border-t border-slate-800 text-sm text-center">
-            © 2025 AuctusAI. All rights reserved. | Privacy Policy | Terms of Service
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ══ PLAYBOOK TRIGGERS ════════════════════════════════════════════════════ */}
+      <section style={{ padding:"90px 24px",background:"rgba(255,255,255,0.01)" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:50 }}>
+            <div>
+              <div className="pill" style={{ background:"rgba(239,68,68,0.1)",color:"#FCA5A5",border:"1px solid rgba(239,68,68,0.2)",marginBottom:16 }}>Playbook Engine</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>
+                Trigger the Right Play<br /><span className="gt">at the Right Moment</span>
+              </h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>Seven trigger conditions with P1/P2/P3 severity routing. Each maps to a named playbook — from 30-day save plans to expansion pitch decks.</p>
+            </div>
+            <SectionImg
+              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80"
+              alt="Business strategy workflow execution"
+              height={240}
+            />
+          </div>
+
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:14 }}>
+            {[
+              ["P1","Health Score Critical","Score < 60 for 2+ months","Immediate CSM Escalation + Executive Sponsor Review","#EF4444"],
+              ["P1","Rapid Decline","Score drops >15pts in 30 days","Emergency QBR + Usage Recovery Plan","#EF4444"],
+              ["P2","At-Risk Plateau","Score 60–70 for 3+ months","Deep Dive Review + Pillar Analysis","#F59E0B"],
+              ["P2","Low Engagement","No CSM touchpoint in 45+ days","Check-in Campaign + Health Briefing","#F59E0B"],
+              ["P2","Qualitative Alert","Negative sentiment in 3+ comms","Champion Reactivation + Technical Review","#F59E0B"],
+              ["P3","Expansion Signal","Score >85 + low feature saturation","Upsell Opportunity Review + SKU Expansion","#10B981"],
+              ["P1","Churn Early Warning","Wizard B pattern: Churn Risk trajectory","30-Day Save Plan + C-Suite Engagement","#EF4444"],
+            ].map(([sev,title,cond,play,color])=>(
+              <div key={title as string} className="glass" style={{ padding:"18px 22px",borderLeft:`3px solid ${color}` }}>
+                <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:10 }}>
+                  <div className="pill" style={{ background:`${color}18`,color:color as string,border:`1px solid ${color}44` }}>{sev}</div>
+                  <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9" }}>{title as string}</div>
+                </div>
+                <div style={{ fontSize:11,color:"#64748B",marginBottom:7,fontStyle:"italic" }}>{cond as string}</div>
+                <div style={{ fontSize:12,color:"#94A3B8" }}>→ {play as string}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ══ ABOUT / FOUNDER ══════════════════════════════════════════════════════ */}
+      <section id="about" style={{ padding:"90px 24px" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center" }}>
+            <div>
+              <div className="pill" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:20 }}>About AuctusAI</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,40px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:20 }}>
+                Built by a<br /><span className="gt">Practitioner,</span><br />Not a Lab
+              </h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.8,marginBottom:28 }}>
+                Founded by <strong style={{ color:"#CBD5E1" }}>Manoj Gupta</strong> — 25 years of enterprise technology leadership across Oracle, IBM, Accenture, and DXC. CS Pulse is built from direct experience in the gap between dashboards that look good and intelligence that actually prevents churn.
+              </p>
+
+              <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+                {[
+                  ["🏢","Oracle","VP Product Engineering · 10 yrs · Fusion ERP, 5,000+ customers"],
+                  ["🔵","IBM","Partner · Cloud Innovation · $140M P&L · 700-person team"],
+                  ["🟣","Accenture","Senior Manager · Cloud Advisory · 4 years"],
+                  ["⚙️","DXC Technology","Senior Managing Partner · $10M+ enterprise deals"],
+                ].map(([icon,co,detail])=>(
+                  <div key={co as string} style={{ display:"flex",gap:12,padding:"11px 14px",background:"rgba(255,255,255,0.02)",borderRadius:10,border:"1px solid rgba(255,255,255,0.05)" }}>
+                    <span style={{ fontSize:18 }}>{icon}</span>
+                    <div>
+                      <div style={{ fontSize:13,fontWeight:700,color:"#E2E8F0" }}>{co as string}</div>
+                      <div style={{ fontSize:11,color:"#475569" }}>{detail as string}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display:"flex",flexDirection:"column",gap:18 }}>
+              <SectionImg
+                src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80"
+                alt="Enterprise technology leadership team"
+                height={220}
+              />
+              <div style={{ background:"linear-gradient(135deg,rgba(14,165,233,0.07),rgba(99,102,241,0.07))",border:"1px solid rgba(14,165,233,0.15)",borderRadius:18,padding:"28px" }}>
+                <div style={{ fontFamily:"Sora,sans-serif",fontSize:38,fontWeight:800,color:"#F1F5F9",letterSpacing:"-0.03em",marginBottom:6 }}>auctus</div>
+                <div style={{ fontSize:13,color:"#64748B",fontStyle:"italic",marginBottom:14 }}>Latin: "increased · augmented · grown"</div>
+                <div style={{ height:1,background:"rgba(255,255,255,0.06)",marginBottom:14 }} />
+                <div style={{ fontSize:16,fontWeight:700,color:"#CBD5E1",lineHeight:1.5,marginBottom:8 }}>
+                  "Augmented Intelligence for Customer Growth"
+                </div>
+                <div style={{ fontSize:12,color:"#475569" }}>One platform. Every vertical. Governed AI with human expertise at every step.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ CTA ══════════════════════════════════════════════════════════════════ */}
+      <section id="contact" style={{ padding:"90px 24px",position:"relative",overflow:"hidden" }}>
+        <div style={{ position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(14,165,233,0.05),rgba(99,102,241,0.05))",pointerEvents:"none" }} />
+        <div style={{ maxWidth:680,margin:"0 auto",textAlign:"center",position:"relative" }}>
+          <div className="pill" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:20 }}>Get Started</div>
+          <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(30px,4vw,48px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:18 }}>
+            Ready to Make Every Account<br /><span className="gt">Move Forward?</span>
+          </h2>
+          <p style={{ fontSize:16,color:"#64748B",lineHeight:1.7,marginBottom:40 }}>
+            Request a demo — we'll run CS Pulse against a synthetic dataset matching your vertical. No commitment, no production data required.
+          </p>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:18,marginBottom:36 }}>
+            {[
+              ["🔬","Live Platform Demo","See the 5-pillar dashboard, Signal Analyst agent, and playbook triggers in action."],
+              ["📊","Portfolio Health Pilot","Bring your data. We'll run a health scoring analysis in 2 weeks — no platform setup needed."],
+            ].map(([icon,title,sub])=>(
+              <div key={title as string} className="glass" style={{ padding:"24px",textAlign:"left" }}>
+                <div style={{ fontSize:28,marginBottom:10 }}>{icon}</div>
+                <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9",marginBottom:7 }}>{title as string}</div>
+                <div style={{ fontSize:13,color:"#64748B",lineHeight:1.6 }}>{sub as string}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
+            <a href="mailto:manoj.gupta@auctusai.ai" className="btn-p" style={{ padding:"15px 36px",fontSize:15,borderRadius:11,textDecoration:"none",display:"inline-block" }}>Contact Us →</a>
+            <a href="https://auctusai.ai" className="btn-g" style={{ padding:"15px 28px",fontSize:15,borderRadius:11,textDecoration:"none",display:"inline-block" }}>Visit auctusai.ai</a>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ FOOTER ═══════════════════════════════════════════════════════════════ */}
+      <footer style={{ borderTop:"1px solid rgba(255,255,255,0.06)",padding:"40px 24px 28px",background:"rgba(0,0,0,0.3)" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr",gap:36,marginBottom:36 }}>
+            <div>
+              <div style={{ display:"flex",alignItems:"center",gap:9,marginBottom:14 }}>
+                <div style={{ width:30,height:30,borderRadius:8,background:"linear-gradient(135deg,#0EA5E9,#6366F1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16 }}>⚡</div>
+                <div style={{ fontFamily:"Sora,sans-serif",fontWeight:800,fontSize:15,color:"#F1F5F9" }}>AuctusAI</div>
+              </div>
+              <p style={{ fontSize:12,color:"#475569",lineHeight:1.7,maxWidth:240 }}>CS Pulse — AI-native revenue intelligence for datacenter and enterprise verticals.</p>
+              <div style={{ marginTop:12,fontSize:11,color:"#334155" }}>manoj.gupta@auctusai.ai</div>
+            </div>
+            {[
+              ["Platform",["5-Pillar Model","Signal Analyst","Playbook Engine","Revenue Intelligence","Synthetic Data"]],
+              ["Technology",["Qdrant Vector DB","Wizard A/B/C","Agentic AI","PostgreSQL","Multi-Tenant"]],
+              ["Company",["About","Request Demo","Contact","Privacy","Terms"]],
+            ].map(([heading,links])=>(
+              <div key={heading as string}>
+                <div style={{ fontSize:11,fontWeight:700,color:"#475569",textTransform:"uppercase",letterSpacing:".08em",marginBottom:14 }}>{heading as string}</div>
+                <div style={{ display:"flex",flexDirection:"column",gap:9 }}>
+                  {(links as string[]).map(l=>(
+                    <a key={l} href="#" style={{ fontSize:12,color:"#334155",textDecoration:"none" }}
+                      onMouseEnter={e=>(e.target as HTMLElement).style.color="#0EA5E9"}
+                      onMouseLeave={e=>(e.target as HTMLElement).style.color="#334155"}>
+                      {l}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:20,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:10 }}>
+            <div style={{ fontSize:11,color:"#334155" }}>© 2026 AuctusAI Inc. All rights reserved.</div>
+            <div style={{ fontSize:11,color:"#1E293B",fontStyle:"italic" }}>auctus — Latin for "growth through augmentation"</div>
           </div>
         </div>
       </footer>
+
     </div>
   );
 }
