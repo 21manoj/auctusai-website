@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
 
-// ─── TYPES ────────────────────────────────────────────────────────────────────
-interface Pillar { id: string; name: string; weight: string; color: string; kpis: string[]; }
-interface Feature { icon: string; title: string; desc: string; tag: string; tagColor: string; }
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
-const PILLARS: Pillar[] = [
+const PILLARS = [
   { id:"P1", name:"Deployment Velocity",      weight:"30%", color:"#0EA5E9",
     kpis:["GPU Cluster Uptime","Training Completion Rate","Deployment Lead Time","Provisioning Success Rate"] },
   { id:"P2", name:"Operational Stability",    weight:"25%", color:"#10B981",
@@ -18,7 +15,7 @@ const PILLARS: Pillar[] = [
     kpis:["Expansion Signal Score","Feature Saturation Rate","Upsell Opportunity Index","Executive Sponsor Activity"] },
 ];
 
-const FEATURES: Feature[] = [
+const FEATURES = [
   { icon:"🧬", title:"Synthetic Data Engine",   desc:"8 pre-built health trajectory scenarios — churn freefall to turnaround recovery. Demo and train without touching production data.",      tag:"Data Layer",      tagColor:"#0EA5E9" },
   { icon:"🔍", title:"Qdrant Vector Search",     desc:"Dual-collection semantic search across 20+ qualitative signals per account. Emails, escalations, meeting notes — all context-retrieved.", tag:"AI Infrastructure", tagColor:"#8B5CF6" },
   { icon:"🧠", title:"Signal Analyst Agent",     desc:"AI agent combining PostgreSQL KPIs + Qdrant qualitative signals into a natural-language health recommendation with early-warning flags.", tag:"Agentic AI",       tagColor:"#6366F1" },
@@ -46,7 +43,7 @@ const RINGS = [
 ];
 
 // ─── HEALTH BAR ───────────────────────────────────────────────────────────────
-function HealthBar({ score, color }: { score: number; color: string }) {
+function HealthBar({ score, color }) {
   const auto = score >= 80 ? "#10B981" : score >= 60 ? "#F59E0B" : "#EF4444";
   return (
     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -240,7 +237,7 @@ function HexPrism() {
 }
 
 // ─── SECTION IMAGE ────────────────────────────────────────────────────────────
-function SectionImg({ src, alt, height = 280, radius = 20 }: { src:string; alt:string; height?:number; radius?:number }) {
+function SectionImg({ src, alt, height = 280, radius = 20 }) {
   return (
     <div style={{ borderRadius:radius, overflow:"hidden", border:"1px solid rgba(255,255,255,0.07)", boxShadow:"0 24px 80px rgba(0,0,0,0.5)" }}>
       <img src={src} alt={alt} style={{ width:"100%", height, objectFit:"cover", display:"block", filter:"brightness(0.85) saturate(1.2)" }} />
@@ -252,7 +249,7 @@ function SectionImg({ src, alt, height = 280, radius = 20 }: { src:string; alt:s
 export default function AuctusAIWebsite() {
   const [activePillar, setActivePillar] = useState(0);
 
-  const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
 
   return (
     <div style={{ fontFamily:"'DM Sans', system-ui, sans-serif", background:"#060B18", color:"#E2E8F0", overflowX:"hidden" }}>
@@ -700,8 +697,8 @@ export default function AuctusAIWebsite() {
                 <div style={{ display:"flex",flexDirection:"column",gap:9 }}>
                   {(links as string[]).map(l=>(
                     <a key={l} href="#" style={{ fontSize:12,color:"#334155",textDecoration:"none" }}
-                      onMouseEnter={e=>(e.target as HTMLElement).style.color="#0EA5E9"}
-                      onMouseLeave={e=>(e.target as HTMLElement).style.color="#334155"}>
+                      onMouseEnter={e=>(e.target).style.color="#0EA5E9"}
+                      onMouseLeave={e=>(e.target).style.color="#334155"}>
                       {l}
                     </a>
                   ))}
