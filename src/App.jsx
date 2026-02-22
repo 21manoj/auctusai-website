@@ -28,12 +28,7 @@ const VERTICALS = [
   { label:"Retail / E-Comm",    icon:"🛒",  color:"#EC4899" },
 ];
 
-const RINGS = [
-  { label:"Revenue Intelligence", r:210 },
-  { label:"AI Governance",        r:255 },
-  { label:"Explainability",       r:300 },
-  { label:"Human-in-the-Loop",    r:345 },
-];
+
 
 function HealthBar({ score, color }) {
   const auto = score >= 80 ? "#10B981" : score >= 60 ? "#F59E0B" : "#EF4444";
@@ -47,51 +42,124 @@ function HealthBar({ score, color }) {
   );
 }
 
+// 3D carpet disc layers that sit beneath the hexagonal prism
+// Each disc is an ellipse rendered in a shared perspective scene
+// Labels live ON the rings via SVG textPath — no external legend needed
+const CARPET = [
+  { label:"REVENUE INTELLIGENCE",          color:"#DC2626", rim:"#FCA5A5", rx:260, ry:52, thickness:14, zOff:-10 },
+  { label:"AI GOVERNANCE",                 color:"#991B1B", rim:"#F87171", rx:320, ry:64, thickness:11, zOff:-36 },
+  { label:"DATA INTEGRATION & MANAGEMENT", color:"#7F1D1D", rim:"#FCA5A5", rx:390, ry:78, thickness: 8, zOff:-62 },
+];
+
 function HexPrism() {
   const [angle, setAngle] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setAngle(a => (a + 0.3) % 360), 30);
     return () => clearInterval(id);
   }, []);
+
   const FW = 170, FH = 190, APO = 147;
+
   return (
-    <div style={{ width:"100%", display:"flex", justifyContent:"center", alignItems:"center", padding:"60px 0 120px", position:"relative" }}>
+    <div style={{ width:"100%", display:"flex", justifyContent:"center", padding:"50px 0 60px", position:"relative" }}>
+
+      {/* ambient glow */}
       <div style={{ position:"absolute", inset:0, display:"flex", justifyContent:"center", alignItems:"center", pointerEvents:"none" }}>
-        <div style={{ width:700, height:700, borderRadius:"50%", background:"radial-gradient(circle, rgba(14,165,233,0.07) 0%, transparent 65%)" }} />
+        <div style={{ width:800, height:800, borderRadius:"50%", background:"radial-gradient(circle,rgba(14,165,233,0.06) 0%,transparent 65%)" }} />
       </div>
-      <div style={{ position:"relative", zIndex:2 }}>
-        <div style={{ perspective:900, perspectiveOrigin:"50% 45%" }}>
-          <div style={{ width:FW, height:FH, position:"relative", transformStyle:"preserve-3d", transform:`rotateX(-14deg) rotateY(${angle}deg)`, margin:"0 auto" }}>
-            <div style={{ position:"absolute", width:FW, height:FW, left:0, top:`-${FW/2-10}px`, transformStyle:"preserve-3d", transform:"rotateX(90deg) translateZ(0px)", background:"conic-gradient(from 0deg,#0EA5E940,#10B98140,#8B5CF640,#F59E0B40,#EF444440,#EC489940,#0EA5E940)", clipPath:"polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)", filter:"blur(1px)" }} />
-            <div style={{ position:"absolute", width:FW, height:FW, left:0, bottom:`-${FW/2-10}px`, transformStyle:"preserve-3d", transform:"rotateX(-90deg) translateZ(0px)", background:"conic-gradient(from 0deg,#0EA5E920,#10B98120,#8B5CF620,#F59E0B20,#EF444420,#EC489920,#0EA5E920)", clipPath:"polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)", filter:"blur(2px)" }} />
-            {VERTICALS.map((v, i) => (
-              <div key={v.label} style={{ position:"absolute", width:FW, height:FH, left:0, top:0, backfaceVisibility:"hidden", transform:`rotateY(${i*60}deg) translateZ(${APO}px)`, background:`linear-gradient(160deg,${v.color}18 0%,${v.color}08 100%)`, border:`1px solid ${v.color}55`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:10, borderRadius:4, boxShadow:`inset 0 0 30px ${v.color}15,0 0 40px ${v.color}20` }}>
-                <div style={{ fontSize:34 }}>{v.icon}</div>
-                <div style={{ fontSize:13, fontWeight:700, color:"#E2E8F0", textAlign:"center", letterSpacing:"-0.01em", lineHeight:1.3, padding:"0 12px" }}>{v.label}</div>
-                <div style={{ width:32, height:2, borderRadius:999, background:v.color, opacity:0.7 }} />
-                <div style={{ fontSize:10, color:v.color, fontWeight:600, letterSpacing:"0.08em", textTransform:"uppercase" }}>Vertical</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div style={{ position:"absolute", top:FH+40, left:"50%", transform:"translateX(-50%)", pointerEvents:"none" }}>
-          <svg width={750} height={280} viewBox="-375 -60 750 280" style={{ overflow:"visible" }}>
-            {RINGS.map((ring, i) => {
-              const rx = ring.r, ry = rx * 0.28, opacity = 0.75 - i * 0.1;
+
+      <div style={{ width:700, height:680, flexShrink:0, position:"relative", zIndex:2 }}>
+        <div style={{ perspective:1100, perspectiveOrigin:"50% 32%", width:"100%", height:"100%" }}>
+          <div style={{ width:"100%", height:"100%", position:"relative", transformStyle:"preserve-3d", transform:"rotateX(-20deg)" }}>
+
+            {/* ── CARPET DISCS — label text spread around full ring via SVG textPath ── */}
+            {[...CARPET].reverse().map((disc) => {
+              const W = disc.rx * 2, H = disc.ry * 2;
+              const a = disc.rx * 0.87, b = disc.ry * 0.80;
+              const cx = disc.rx, cy = disc.ry;
+              // Full ellipse: two arcs meeting at left and right midpoints
+              const arcPath = `M ${cx - a},${cy} A ${a},${b} 0 1,1 ${cx + a},${cy} A ${a},${b} 0 1,1 ${cx - a},${cy}`;
+              // Ramanujan perimeter approximation
+              const perim = Math.PI * (3*(a+b) - Math.sqrt((3*a+b)*(a+3*b)));
+              // Spread text across ~55% of the top arc
+              const chars = disc.label.length;
+              const spread = perim * 0.55;
+              const ls = Math.max(4, Math.round((spread - chars * 9) / chars));
+              const uid = `arc${disc.rx}`;
               return (
-                <g key={ring.label}>
-                  <ellipse cx={0} cy={i*52+10} rx={rx} ry={ry} fill="none" stroke="#DC2626" strokeWidth={1.5} strokeOpacity={opacity} />
-                  <ellipse cx={0} cy={i*52+10} rx={rx} ry={ry} fill="none" stroke="#991B1B" strokeWidth={0.8} strokeOpacity={opacity*0.5} />
-                  <circle cx={rx+5} cy={i*52+11} r={3} fill="#DC2626" opacity={opacity} />
-                  <text x={rx+12} y={i*52+15} fill="#FCA5A5" fontSize={11} fontWeight="700" letterSpacing="0.06em" fontFamily="DM Sans,system-ui" opacity={opacity}>{ring.label}</text>
-                </g>
+                <div key={disc.label} style={{
+                  position:"absolute",
+                  left:"50%", top:"64%",
+                  width: W, height: H,
+                  marginLeft: -disc.rx,
+                  marginTop: -disc.ry,
+                  transformStyle:"preserve-3d",
+                  transform:`translateZ(${disc.zOff}px)`,
+                  pointerEvents:"none",
+                }}>
+                  {/* disc top face */}
+                  <div style={{ position:"absolute", inset:0, borderRadius:"50%", background:`radial-gradient(ellipse at 40% 35%, ${disc.color}60 0%, ${disc.color}20 50%, transparent 72%)`, border:`1.5px solid ${disc.rim}70`, boxShadow:`0 0 48px ${disc.color}55, inset 0 0 28px ${disc.color}28` }} />
+                  {/* outer halo */}
+                  <div style={{ position:"absolute", inset:-4, borderRadius:"50%", border:`1px solid ${disc.rim}28`, boxShadow:`0 0 20px ${disc.color}44` }} />
+                  {/* thickness strip */}
+                  <div style={{ position:"absolute", left:"4%", right:"4%", bottom:-disc.thickness, height:disc.thickness, borderRadius:"0 0 50% 50% / 0 0 100% 100%", background:`linear-gradient(180deg,${disc.color}99,${disc.color}11)`, filter:"blur(1px)" }} />
+
+                  {/* text spread around the ring — startOffset 0% = left midpoint, 25% = top center */}
+                  <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position:"absolute", inset:0, overflow:"visible" }}>
+                    <defs>
+                      <path id={uid} d={arcPath} />
+                      <filter id={`glow${disc.rx}`}>
+                        <feGaussianBlur stdDeviation="2" result="blur" />
+                        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                      </filter>
+                    </defs>
+                    <text filter={`url(#glow${disc.rx})`}>
+                      <textPath
+                        href={`#${uid}`}
+                        startOffset="25%"
+                        textAnchor="middle"
+                        fill={disc.rim}
+                        fontSize={11}
+                        fontWeight="800"
+                        fontFamily="DM Sans, system-ui"
+                        letterSpacing={ls}
+                      >
+                        {disc.label}
+                      </textPath>
+                    </text>
+                  </svg>
+                </div>
               );
             })}
-          </svg>
+
+            {/* ── HEXAGONAL PRISM ── */}
+            <div style={{
+              position:"absolute",
+              left:"50%", top:"6%",
+              width:FW, height:FH,
+              marginLeft:-FW/2,
+              transformStyle:"preserve-3d",
+              transform:`rotateY(${angle}deg)`,
+            }}>
+              <div style={{ position:"absolute", width:FW, height:FW, left:0, top:`-${FW/2-10}px`, transformStyle:"preserve-3d", transform:"rotateX(90deg)", background:"conic-gradient(from 0deg,#0EA5E940,#10B98140,#8B5CF640,#F59E0B40,#EF444440,#EC489940,#0EA5E940)", clipPath:"polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)", filter:"blur(1px)" }} />
+              <div style={{ position:"absolute", width:FW, height:FW, left:0, bottom:`-${FW/2-10}px`, transformStyle:"preserve-3d", transform:"rotateX(-90deg)", background:"conic-gradient(from 0deg,#0EA5E920,#10B98120,#8B5CF620,#F59E0B20,#EF444420,#EC489920,#0EA5E920)", clipPath:"polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)", filter:"blur(2px)" }} />
+              {VERTICALS.map((v, i) => (
+                <div key={v.label} style={{ position:"absolute", width:FW, height:FH, left:0, top:0, backfaceVisibility:"hidden", transform:`rotateY(${i*60}deg) translateZ(${APO}px)`, background:`linear-gradient(160deg,${v.color}18 0%,${v.color}08 100%)`, border:`1px solid ${v.color}55`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:10, borderRadius:4, boxShadow:`inset 0 0 30px ${v.color}15,0 0 40px ${v.color}20` }}>
+                  <div style={{ fontSize:34 }}>{v.icon}</div>
+                  <div style={{ fontSize:13, fontWeight:700, color:"#E2E8F0", textAlign:"center", lineHeight:1.3, padding:"0 12px" }}>{v.label}</div>
+                  <div style={{ width:32, height:2, borderRadius:999, background:v.color, opacity:0.7 }} />
+                  <div style={{ fontSize:10, color:v.color, fontWeight:600, letterSpacing:"0.08em", textTransform:"uppercase" }}>Vertical</div>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
-        <div style={{ position:"absolute", top:FH+315, left:"50%", transform:"translateX(-50%)", textAlign:"center", width:340 }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#EF4444", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:6 }}>Universal Intelligence Layer</div>
-          <div style={{ fontSize:13, color:"#475569", lineHeight:1.6 }}>One platform. Every vertical. Governed, explainable, continuously learning.</div>
+
+        {/* caption */}
+        <div style={{ position:"absolute", bottom:0, left:0, right:0, textAlign:"center" }}>
+          <div style={{ fontSize:11, fontWeight:700, color:"#EF4444", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:4 }}>Universal Intelligence Layer</div>
+          <div style={{ fontSize:13, color:"#475569" }}>One platform. Every vertical. Governed, explainable, continuously learning.</div>
         </div>
       </div>
     </div>
