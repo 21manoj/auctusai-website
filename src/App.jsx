@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
 
-const PILLARS = [
-  { id:"P1", name:"Deployment Velocity",     weight:"30%", color:"#0EA5E9", kpis:["GPU Cluster Uptime","Training Completion Rate","Deployment Lead Time","Provisioning Success Rate"] },
-  { id:"P2", name:"Operational Stability",   weight:"25%", color:"#10B981", kpis:["System Reliability Score","Incident Response Time","SLA Adherence","MTTR"] },
-  { id:"P3", name:"AI Workload Performance", weight:"20%", color:"#8B5CF6", kpis:["Inference Latency","Throughput Efficiency","Model Accuracy Trend","GPU Utilization Rate"] },
-  { id:"P4", name:"Channel Partner Health",  weight:"15%", color:"#F59E0B", kpis:["Partner Engagement Score","Co-sell Pipeline Health","Certification Compliance","Support Ticket Volume"] },
-  { id:"P5", name:"Expansion Readiness",     weight:"10%", color:"#EF4444", kpis:["Expansion Signal Score","Feature Saturation Rate","Upsell Opportunity Index","Executive Sponsor Activity"] },
+/* ─── INTELLIGENCE DIMENSIONS (replaces old 5-pillar CS model) ─── */
+const DIMENSIONS = [
+  { id:"D1", name:"Adoption Velocity",       weight:"15%", color:"#0EA5E9", kpis:["Time to First Value","Feature Adoption Rate","Deployment Lead Time","Provisioning Success Rate"] },
+  { id:"D2", name:"Operational Risk",         weight:"20%", color:"#EF4444", kpis:["System Reliability Score","Incident Frequency","SLA Breach Rate","MTTR Trend"] },
+  { id:"D3", name:"Engagement Depth",         weight:"15%", color:"#8B5CF6", kpis:["Stakeholder Coverage","Champion Activity Score","Executive Sponsor Cadence","Multi-Thread Index"] },
+  { id:"D4", name:"Expansion Readiness",      weight:"15%", color:"#10B981", kpis:["Expansion Signal Score","Feature Saturation Rate","Upsell Opportunity Index","Whitespace Analysis"] },
+  { id:"D5", name:"Value Realization",        weight:"15%", color:"#F59E0B", kpis:["Outcome Achievement Rate","ROI Milestone Progress","Business Impact Score","Time to ROI"] },
+  { id:"D6", name:"Competitive Pressure",     weight:"10%", color:"#EC4899", kpis:["Competitive Mention Frequency","Vendor Evaluation Signals","Contract Review Triggers","Switching Cost Index"] },
+  { id:"D7", name:"Sentiment Momentum",       weight:"5%",  color:"#6366F1", kpis:["NPS Trend","Support Sentiment Score","Escalation Pattern","Communication Tone Shift"] },
+  { id:"D8", name:"Relationship Resilience",  weight:"5%",  color:"#14B8A6", kpis:["Champion Turnover Risk","Decision-Maker Access","Org Change Impact","Single-Thread Exposure"] },
 ];
 
 const FEATURES = [
-  { icon:"🧬", title:"Synthetic Data Engine",    desc:"8 pre-built health trajectory scenarios — churn freefall to turnaround recovery. Demo and train without touching production data.",           tag:"Data Layer",        tagColor:"#0EA5E9" },
-  { icon:"🔍", title:"Qdrant Vector Search",      desc:"Dual-collection semantic search across 20+ qualitative signals per account. Emails, escalations, meeting notes — all context-retrieved.",  tag:"AI Infrastructure", tagColor:"#8B5CF6" },
-  { icon:"🧠", title:"Signal Analyst Agent",      desc:"AI agent combining PostgreSQL KPIs and Qdrant qualitative signals into a natural-language health recommendation with early-warning flags.", tag:"Agentic AI",         tagColor:"#6366F1" },
-  { icon:"🎯", title:"Playbook Orchestration",    desc:"7 trigger conditions with P1/P2/P3 severity routing. Every critical account gets a named CSM owner and resolution date.",                  tag:"Automation",         tagColor:"#F59E0B" },
-  { icon:"📈", title:"Revenue Intelligence",      desc:"Monthly account-level revenue risk and expansion scoring. Compounding improvements drive measurable ARR protection over time.",             tag:"Methodology",        tagColor:"#10B981" },
-  { icon:"⚙️", title:"Wizard A / B / C Pipeline", desc:"Journey Generator, Pattern Analyzer, and Weight Optimizer run automatically on onboarding and monthly recalibration.",                     tag:"ML Pipeline",        tagColor:"#EF4444" },
-  { icon:"🏢", title:"Multi-Tenant Architecture", desc:"UUID-based fully isolated customer environments. Independent Qdrant collections and PostgreSQL schemas. Zero cross-tenant exposure.",        tag:"Enterprise",         tagColor:"#0369A1" },
-  { icon:"🔄", title:"Continuous Weight Learning", desc:"Wizard C recalibrates L1/L2 health scoring weights monthly from your actual outcomes. The model converges to your customer reality.",     tag:"Self-Learning",      tagColor:"#7C3AED" },
+  { icon:"🕸️",  title:"Context Graph",           desc:"6 node types, temporal weighted edges, and 3-tier storage map the causal chain from signal to revenue impact. Know exactly why an account is at risk.",  tag:"Core Engine",    tagColor:"#EF4444" },
+  { icon:"📖",  title:"Story Arcs",               desc:"8 intelligence narratives replace flat dashboards. Each arc is a causally-linked screenplay — cast, plot points, causal chains, decisions, and outcomes.",  tag:"Intelligence",   tagColor:"#8B5CF6" },
+  { icon:"💰",  title:"Revenue at Risk Engine",   desc:"Real-time revenue exposure across your portfolio. Every signal links to dollar impact — churn risk, contraction probability, expansion upside.",  tag:"Revenue",        tagColor:"#10B981" },
+  { icon:"🧠",  title:"Signal Analyst Agent",     desc:"AI agent traverses the Context Graph: KPI data + qualitative signals + stakeholder context → actionable revenue intelligence with full explainability.",  tag:"Agentic AI",     tagColor:"#6366F1" },
+  { icon:"🎯",  title:"Outcome Economics",        desc:"ROI of intervention, cost of inaction, expansion probability — every recommendation comes with a revenue-denominated business case.",  tag:"ROI Engine",     tagColor:"#F59E0B" },
+  { icon:"⚙️",  title:"Self-Learning Weights",    desc:"Wizard C recalibrates L1/L2 intelligence weights monthly from your actual outcomes. The model converges to your revenue reality — not a generic benchmark.",  tag:"ML Pipeline",    tagColor:"#0EA5E9" },
+  { icon:"🔌",  title:"Universal Integration",    desc:"Day 1: Inbound webhooks. Day 90: Context API. Day 180: MCP Server. Native AI agent integration with SFDC, HubSpot, Intercom, Gainsight.",  tag:"Platform",       tagColor:"#0369A1" },
+  { icon:"🏢",  title:"Multi-Tenant Intelligence",desc:"UUID-isolated customer environments. Independent context graphs and vector stores. Enterprise-grade governance with zero cross-tenant exposure.",  tag:"Enterprise",     tagColor:"#7C3AED" },
 ];
 
 const VERTICALS = [
@@ -27,8 +31,6 @@ const VERTICALS = [
   { label:"Manufacturing",      icon:"⚙️",  color:"#EF4444" },
   { label:"Retail / E-Comm",    icon:"🛒",  color:"#EC4899" },
 ];
-
-
 
 function HealthBar({ score, color }) {
   const auto = score >= 80 ? "#10B981" : score >= 60 ? "#F59E0B" : "#EF4444";
@@ -42,12 +44,9 @@ function HealthBar({ score, color }) {
   );
 }
 
-// 3D carpet disc layers that sit beneath the hexagonal prism
-// Each disc is an ellipse rendered in a shared perspective scene
-// Labels live ON the rings via SVG textPath — no external legend needed
 const CARPET = [
   { label:"REVENUE INTELLIGENCE",          color:"#DC2626", rim:"#FCA5A5", rx:260, ry:52, thickness:14, zOff:-10 },
-  { label:"AI GOVERNANCE",                 color:"#991B1B", rim:"#F87171", rx:320, ry:64, thickness:11, zOff:-36 },
+  { label:"CONTEXT GRAPH",                 color:"#991B1B", rim:"#F87171", rx:320, ry:64, thickness:11, zOff:-36 },
   { label:"DATA INTEGRATION & MANAGEMENT", color:"#7F1D1D", rim:"#FCA5A5", rx:390, ry:78, thickness: 8, zOff:-62 },
 ];
 
@@ -63,7 +62,6 @@ function HexPrism() {
   return (
     <div style={{ width:"100%", display:"flex", justifyContent:"center", padding:"50px 0 60px", position:"relative" }}>
 
-      {/* ambient glow */}
       <div style={{ position:"absolute", inset:0, display:"flex", justifyContent:"center", alignItems:"center", pointerEvents:"none" }}>
         <div style={{ width:800, height:800, borderRadius:"50%", background:"radial-gradient(circle,rgba(14,165,233,0.06) 0%,transparent 65%)" }} />
       </div>
@@ -72,16 +70,12 @@ function HexPrism() {
         <div style={{ perspective:1100, perspectiveOrigin:"50% 32%", width:"100%", height:"100%" }}>
           <div style={{ width:"100%", height:"100%", position:"relative", transformStyle:"preserve-3d", transform:"rotateX(-20deg)" }}>
 
-            {/* ── CARPET DISCS — label text spread around full ring via SVG textPath ── */}
             {[...CARPET].reverse().map((disc) => {
               const W = disc.rx * 2, H = disc.ry * 2;
               const a = disc.rx * 0.87, b = disc.ry * 0.80;
               const cx = disc.rx, cy = disc.ry;
-              // Full ellipse: two arcs meeting at left and right midpoints
               const arcPath = `M ${cx - a},${cy} A ${a},${b} 0 1,1 ${cx + a},${cy} A ${a},${b} 0 1,1 ${cx - a},${cy}`;
-              // Ramanujan perimeter approximation
               const perim = Math.PI * (3*(a+b) - Math.sqrt((3*a+b)*(a+3*b)));
-              // Spread text across ~55% of the top arc
               const chars = disc.label.length;
               const spread = perim * 0.55;
               const ls = Math.max(4, Math.round((spread - chars * 9) / chars));
@@ -97,14 +91,10 @@ function HexPrism() {
                   transform:`translateZ(${disc.zOff}px)`,
                   pointerEvents:"none",
                 }}>
-                  {/* disc top face */}
                   <div style={{ position:"absolute", inset:0, borderRadius:"50%", background:`radial-gradient(ellipse at 40% 35%, ${disc.color}60 0%, ${disc.color}20 50%, transparent 72%)`, border:`1.5px solid ${disc.rim}70`, boxShadow:`0 0 48px ${disc.color}55, inset 0 0 28px ${disc.color}28` }} />
-                  {/* outer halo */}
                   <div style={{ position:"absolute", inset:-4, borderRadius:"50%", border:`1px solid ${disc.rim}28`, boxShadow:`0 0 20px ${disc.color}44` }} />
-                  {/* thickness strip */}
                   <div style={{ position:"absolute", left:"4%", right:"4%", bottom:-disc.thickness, height:disc.thickness, borderRadius:"0 0 50% 50% / 0 0 100% 100%", background:`linear-gradient(180deg,${disc.color}99,${disc.color}11)`, filter:"blur(1px)" }} />
 
-                  {/* text spread around the ring — startOffset 0% = left midpoint, 25% = top center */}
                   <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position:"absolute", inset:0, overflow:"visible" }}>
                     <defs>
                       <path id={uid} d={arcPath} />
@@ -132,7 +122,6 @@ function HexPrism() {
               );
             })}
 
-            {/* ── HEXAGONAL PRISM ── */}
             <div style={{
               position:"absolute",
               left:"50%", top:"6%",
@@ -156,10 +145,9 @@ function HexPrism() {
           </div>
         </div>
 
-        {/* caption */}
         <div style={{ position:"absolute", bottom:0, left:0, right:0, textAlign:"center" }}>
-          <div style={{ fontSize:11, fontWeight:700, color:"#EF4444", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:4 }}>Universal Intelligence Layer</div>
-          <div style={{ fontSize:13, color:"#475569" }}>One platform. Every vertical. Governed, explainable, continuously learning.</div>
+          <div style={{ fontSize:11, fontWeight:700, color:"#EF4444", letterSpacing:"0.1em", textTransform:"uppercase", marginBottom:4 }}>System of Intelligence</div>
+          <div style={{ fontSize:13, color:"#475569" }}>Above CRM. Above CS Platforms. The revenue intelligence layer your executives need.</div>
         </div>
       </div>
     </div>
@@ -174,8 +162,39 @@ function SectionImg({ src, alt, height }) {
   );
 }
 
+/* ─── Context Graph Visualization ─── */
+function ContextGraphViz() {
+  const nodes = [
+    { type:"ACCOUNT",    x:50, y:50, color:"#0EA5E9", label:"Account" },
+    { type:"SIGNAL",     x:20, y:25, color:"#EF4444", label:"Signal" },
+    { type:"STAKEHOLDER",x:80, y:25, color:"#8B5CF6", label:"Stakeholder" },
+    { type:"DECISION",   x:20, y:75, color:"#F59E0B", label:"Decision" },
+    { type:"OUTCOME",    x:80, y:75, color:"#10B981", label:"Outcome" },
+    { type:"EXTERNAL",   x:50, y:8,  color:"#EC4899", label:"External" },
+  ];
+  const edges = [
+    [1,0],[2,0],[0,3],[3,4],[5,1],[1,3],[2,3],[4,0],
+  ];
+  return (
+    <div style={{ position:"relative", width:"100%", height:260, background:"rgba(255,255,255,0.02)", borderRadius:16, border:"1px solid rgba(255,255,255,0.06)", overflow:"hidden" }}>
+      <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style={{ position:"absolute", inset:0 }}>
+        {edges.map(([from,to],i) => (
+          <line key={i} x1={nodes[from].x} y1={nodes[from].y} x2={nodes[to].x} y2={nodes[to].y} stroke="rgba(255,255,255,0.08)" strokeWidth="0.4" />
+        ))}
+        {nodes.map(n => (
+          <g key={n.type}>
+            <circle cx={n.x} cy={n.y} r="4" fill={n.color+"33"} stroke={n.color} strokeWidth="0.5" />
+            <text x={n.x} y={n.y+9} textAnchor="middle" fill={n.color} fontSize="3.2" fontWeight="700" fontFamily="DM Sans,system-ui">{n.label}</text>
+          </g>
+        ))}
+      </svg>
+      <div style={{ position:"absolute", bottom:10, left:0, right:0, textAlign:"center", fontSize:10, color:"#475569" }}>6 Node Types &middot; Weighted Temporal Edges &middot; 3-Tier Storage</div>
+    </div>
+  );
+}
+
 export default function AuctusAIWebsite() {
-  const [activePillar, setActivePillar] = useState(0);
+  const [activeDim, setActiveDim] = useState(0);
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
 
   return (
@@ -197,7 +216,7 @@ export default function AuctusAIWebsite() {
         .nl:hover{color:#0EA5E9;}
         .gdbg{background-image:linear-gradient(rgba(14,165,233,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(14,165,233,0.03) 1px,transparent 1px);background-size:60px 60px;}
         .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(14,165,233,0.25),transparent);max-width:700px;margin:0 auto;}
-        .pt{padding:6px 16px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;border:1.5px solid rgba(255,255,255,0.06);background:transparent;color:#64748B;font-family:inherit;}
+        .pt{padding:6px 14px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;white-space:nowrap;border:1.5px solid rgba(255,255,255,0.06);background:transparent;color:#64748B;font-family:inherit;}
         .pt:hover{color:#94A3B8;}
         .ptact{color:#fff !important;}
         @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -206,18 +225,18 @@ export default function AuctusAIWebsite() {
         .fl{animation:float 4s ease-in-out infinite;}
       `}</style>
 
-      {/* NAV */}
+      {/* ─── NAV ─── */}
       <nav style={{ position:"fixed",top:0,left:0,right:0,zIndex:100,padding:"0 24px",height:60,display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(6,11,24,0.92)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.05)" }}>
         <div style={{ display:"flex",alignItems:"center",gap:10 }}>
           <div style={{ width:34,height:34,borderRadius:9,background:"linear-gradient(135deg,#0EA5E9,#6366F1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18 }}>⚡</div>
           <div>
             <div style={{ fontFamily:"Sora,sans-serif",fontWeight:800,fontSize:17,letterSpacing:"-0.02em",color:"#F1F5F9" }}>AuctusAI</div>
-            <div style={{ fontSize:9,color:"#475569",letterSpacing:".1em",textTransform:"uppercase",marginTop:-2 }}>CS Pulse Platform</div>
+            <div style={{ fontSize:9,color:"#475569",letterSpacing:".1em",textTransform:"uppercase",marginTop:-2 }}>Revenue Intelligence</div>
           </div>
         </div>
         <div style={{ display:"flex",alignItems:"center",gap:28 }}>
-          {["Platform","Verticals","Pipeline","Revenue Intel"].map((l,i)=>(
-            <button key={l} className="nl" onClick={()=>scrollTo(["platform","verticals","pipeline","rev-intel"][i])}>{l}</button>
+          {["Platform","Context Graph","Story Arcs","Revenue Intel"].map((l,i)=>(
+            <button key={l} className="nl" onClick={()=>scrollTo(["platform","context-graph","story-arcs","rev-intel"][i])}>{l}</button>
           ))}
         </div>
         <div style={{ display:"flex",gap:10 }}>
@@ -226,28 +245,31 @@ export default function AuctusAIWebsite() {
         </div>
       </nav>
 
-      {/* HERO */}
+      {/* ─── HERO ─── */}
       <section id="verticals" style={{ paddingTop:60,position:"relative",overflow:"hidden" }} className="gdbg">
         <div style={{ position:"absolute",top:"10%",left:"50%",transform:"translateX(-50%)",width:800,height:800,borderRadius:"50%",background:"radial-gradient(circle,rgba(14,165,233,0.08) 0%,transparent 65%)",pointerEvents:"none" }} />
         <div style={{ maxWidth:1100,margin:"0 auto",padding:"60px 24px 0",textAlign:"center" }}>
-          <div className="pill fu" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:20 }}>
-            <span style={{ width:6,height:6,borderRadius:"50%",background:"#38BDF8",display:"inline-block" }} />
-            Multi-Vertical · Self-Learning · Human-Governed AI
+          <div className="pill fu" style={{ background:"rgba(239,68,68,0.1)",color:"#FCA5A5",border:"1px solid rgba(239,68,68,0.2)",marginBottom:20 }}>
+            <span style={{ width:6,height:6,borderRadius:"50%",background:"#FCA5A5",display:"inline-block" }} />
+            Revenue Intelligence &middot; Context Graph &middot; Outcome Economics
           </div>
           <h1 className="fu" style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(36px,4.5vw,62px)",fontWeight:800,lineHeight:1.08,letterSpacing:"-0.03em",marginBottom:20 }}>
-            One Intelligence Platform.<br /><span className="gt">Every Customer Vertical.</span>
+            What's the Revenue at Risk?<br /><span className="gt">Now You Know.</span>
           </h1>
-          <p className="fu" style={{ fontSize:18,color:"#64748B",maxWidth:560,margin:"0 auto 16px",lineHeight:1.7 }}>
-            CS Pulse delivers revenue intelligence, AI-governed playbooks, and explainable health scoring — purpose-built for each industry vertical on a single adaptive platform.
+          <p className="fu" style={{ fontSize:18,color:"#64748B",maxWidth:620,margin:"0 auto 16px",lineHeight:1.7 }}>
+            AuctusAI is the System of Intelligence layer above your CRM and CS platform. Every account, every signal, every decision — traced to revenue impact with full causal explainability.
+          </p>
+          <p className="fu" style={{ fontSize:14,color:"#475569",maxWidth:500,margin:"0 auto 0" }}>
+            Built for CROs, CFOs, and CEOs who need to protect and grow recurring revenue.
           </p>
         </div>
         <HexPrism />
       </section>
 
-      {/* STATS BAR */}
+      {/* ─── STATS BAR ─── */}
       <div style={{ background:"rgba(255,255,255,0.02)",borderTop:"1px solid rgba(255,255,255,0.05)",borderBottom:"1px solid rgba(255,255,255,0.05)",padding:"28px 24px" }}>
         <div style={{ maxWidth:1100,margin:"0 auto",display:"flex",justifyContent:"space-around",flexWrap:"wrap",gap:24 }}>
-          {[["5-Pillar","Health Framework"],["3","AI Wizards  A·B·C"],["33","KPIs Per Account"],["Revenue\nIntel","Monthly Scoring"],["Qdrant +\nPostgres","Dual-DB AI Layer"]].map(([v,l])=>(
+          {[["8","Intelligence Dimensions"],["6","Context Node Types"],["9","Story Arc Manifests"],["Revenue\nAt Risk","Real-Time Scoring"],["Context\nGraph","Causal Intelligence"]].map(([v,l])=>(
             <div key={l} style={{ textAlign:"center" }}>
               <div style={{ fontFamily:"Sora,sans-serif",fontSize:26,fontWeight:800,color:"#F1F5F9",whiteSpace:"pre-line",lineHeight:1.2 }}>{v}</div>
               <div style={{ fontSize:12,color:"#475569",marginTop:4 }}>{l}</div>
@@ -256,14 +278,14 @@ export default function AuctusAIWebsite() {
         </div>
       </div>
 
-      {/* PLATFORM FEATURES */}
+      {/* ─── PLATFORM FEATURES ─── */}
       <section id="platform" style={{ padding:"90px 24px" }}>
         <div style={{ maxWidth:1100,margin:"0 auto" }}>
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:60 }}>
             <div>
               <div className="pill" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:16 }}>Platform Capabilities</div>
-              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>Full-Stack<br /><span className="gt">Intelligence Layer</span></h2>
-              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>From synthetic data generation to agentic signal analysis and playbook orchestration — CS Pulse covers the entire customer success lifecycle with explainable, auditable AI.</p>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>The Intelligence Layer<br /><span className="gt">Your Revenue Needs</span></h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>From context graph ingestion to story arc analysis and outcome economics — AuctusAI connects every signal to revenue impact with full causal traceability.</p>
             </div>
             <SectionImg src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80" alt="Enterprise data center" height={260} />
           </div>
@@ -284,56 +306,103 @@ export default function AuctusAIWebsite() {
 
       <div className="divider" />
 
-      {/* 5-PILLAR */}
-      <section id="pillars" style={{ padding:"90px 24px",background:"rgba(255,255,255,0.01)" }}>
+      {/* ─── CONTEXT GRAPH ─── */}
+      <section id="context-graph" style={{ padding:"90px 24px",background:"rgba(255,255,255,0.01)" }}>
         <div style={{ maxWidth:1100,margin:"0 auto" }}>
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:50 }}>
             <div>
-              <div className="pill" style={{ background:"rgba(99,102,241,0.1)",color:"#818CF8",border:"1px solid rgba(99,102,241,0.2)",marginBottom:16 }}>5-Pillar Framework</div>
-              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>Built for<br /><span className="gt">Datacenter Vertical</span></h2>
-              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>Each pillar has configurable L1/L2 weights. Wizard C recalibrates them monthly from your actual churn and expansion outcomes — not a generic SaaS benchmark.</p>
+              <div className="pill" style={{ background:"rgba(239,68,68,0.1)",color:"#FCA5A5",border:"1px solid rgba(239,68,68,0.2)",marginBottom:16 }}>Context Graph Engine</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>Every Signal Has a<br /><span className="gt">Causal Chain</span></h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75,marginBottom:20 }}>The Context Graph maps relationships between accounts, signals, stakeholders, decisions, outcomes, and external factors. Weighted temporal edges reveal why things happen — not just that they did.</p>
+              <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
+                {[
+                  ["ACCOUNT","Hub node — ARR, health score, segment, lifecycle stage","#0EA5E9"],
+                  ["SIGNAL","KPI changes, sentiment shifts, usage anomalies","#EF4444"],
+                  ["STAKEHOLDER","Champions, detractors, decision-makers, influencers","#8B5CF6"],
+                  ["DECISION","Renewal, expansion, escalation, vendor review","#F59E0B"],
+                  ["OUTCOME","Revenue retained, churned, expanded, contracted","#10B981"],
+                  ["EXTERNAL","Market shifts, competitive moves, industry benchmarks","#EC4899"],
+                ].map(([type,desc,color])=>(
+                  <div key={type} style={{ display:"flex",gap:12,padding:"10px 14px",background:"rgba(255,255,255,0.02)",borderRadius:10,border:"1px solid rgba(255,255,255,0.05)" }}>
+                    <div style={{ width:8,height:8,borderRadius:"50%",background:color,flexShrink:0,marginTop:5 }} />
+                    <div>
+                      <span style={{ fontSize:12,fontWeight:700,color:color }}>{type}</span>
+                      <span style={{ fontSize:12,color:"#475569" }}> — {desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <ContextGraphViz />
+          </div>
+
+          <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:18 }}>
+            {[
+              ["T1 Permanent","Skeleton graph — accounts, contracts, org structure. Never expires. Source of truth.","#0EA5E9"],
+              ["T2 Decaying","Active signals and engagement events. 90-180 day TTL. Drives current intelligence.","#F59E0B"],
+              ["T3 Ephemeral","Real-time alerts, meeting notes, email sentiment. 24-72 hour window. Triggers immediate action.","#EF4444"],
+            ].map(([title,desc,color])=>(
+              <div key={title} className="glass" style={{ padding:"22px",borderTop:`3px solid ${color}` }}>
+                <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9",marginBottom:8,fontFamily:"Sora,sans-serif" }}>{title}</div>
+                <p style={{ fontSize:13,color:"#64748B",lineHeight:1.65 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <div className="divider" />
+
+      {/* ─── STORY ARCS (8 Intelligence Dimensions) ─── */}
+      <section id="story-arcs" style={{ padding:"90px 24px" }}>
+        <div style={{ maxWidth:1100,margin:"0 auto" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:50 }}>
+            <div>
+              <div className="pill" style={{ background:"rgba(99,102,241,0.1)",color:"#818CF8",border:"1px solid rgba(99,102,241,0.2)",marginBottom:16 }}>8 Intelligence Dimensions</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>Story Arcs, Not<br /><span className="gt">Static Dashboards</span></h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>Each dimension is a causally-linked narrative — with cast, plot points, causal chains, decisions, and outcomes. Self-learning weights recalibrate monthly from your actual revenue data.</p>
             </div>
             <SectionImg src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Analytics visualization" height={240} />
           </div>
-          <div style={{ display:"flex",gap:8,justifyContent:"center",marginBottom:28,flexWrap:"wrap" }}>
-            {PILLARS.map((p,i)=>(
-              <button key={p.id} className={`pt${activePillar===i?" ptact":""}`}
-                style={ activePillar===i ? {background:p.color,border:`1.5px solid ${p.color}`} : {} }
-                onClick={()=>setActivePillar(i)}>
-                {p.id} · {p.name}
+          <div style={{ display:"flex",gap:6,justifyContent:"center",marginBottom:28,flexWrap:"wrap" }}>
+            {DIMENSIONS.map((d,i)=>(
+              <button key={d.id} className={`pt${activeDim===i?" ptact":""}`}
+                style={ activeDim===i ? {background:d.color,border:`1.5px solid ${d.color}`} : {} }
+                onClick={()=>setActiveDim(i)}>
+                {d.name}
               </button>
             ))}
           </div>
-          <div style={{ background:"rgba(255,255,255,0.03)",border:`1px solid ${PILLARS[activePillar].color}33`,borderRadius:18,padding:"32px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:32 }}>
+          <div style={{ background:"rgba(255,255,255,0.03)",border:`1px solid ${DIMENSIONS[activeDim].color}33`,borderRadius:18,padding:"32px",display:"grid",gridTemplateColumns:"1fr 1fr",gap:32 }}>
             <div>
               <div style={{ display:"flex",alignItems:"center",gap:14,marginBottom:18 }}>
-                <div style={{ width:48,height:48,borderRadius:12,background:PILLARS[activePillar].color+"22",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,fontWeight:800,color:PILLARS[activePillar].color }}>{PILLARS[activePillar].id}</div>
+                <div style={{ width:48,height:48,borderRadius:12,background:DIMENSIONS[activeDim].color+"22",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,fontWeight:800,color:DIMENSIONS[activeDim].color }}>{DIMENSIONS[activeDim].id}</div>
                 <div>
-                  <div style={{ fontSize:19,fontWeight:700,color:"#F1F5F9",fontFamily:"Sora,sans-serif" }}>{PILLARS[activePillar].name}</div>
-                  <div style={{ fontSize:12,color:"#64748B" }}>Default weight: <span style={{ color:PILLARS[activePillar].color,fontWeight:700 }}>{PILLARS[activePillar].weight}</span> · Recalibrates monthly</div>
+                  <div style={{ fontSize:19,fontWeight:700,color:"#F1F5F9",fontFamily:"Sora,sans-serif" }}>{DIMENSIONS[activeDim].name}</div>
+                  <div style={{ fontSize:12,color:"#64748B" }}>Weight: <span style={{ color:DIMENSIONS[activeDim].color,fontWeight:700 }}>{DIMENSIONS[activeDim].weight}</span> · Recalibrates monthly</div>
                 </div>
               </div>
               <div style={{ fontSize:13,color:"#475569",padding:"12px 14px",background:"rgba(255,255,255,0.03)",borderRadius:10,border:"1px solid rgba(255,255,255,0.06)" }}>
-                💡 Weights are starting points. After 90 days of data, Wizard C learns the optimal weight for your portfolio.
+                Every dimension answers: <strong style={{ color:"#CBD5E1" }}>What's the revenue at risk? What's the ROI of intervention? What happens if we don't act?</strong>
               </div>
             </div>
             <div style={{ display:"flex",flexDirection:"column",gap:8 }}>
-              {PILLARS[activePillar].kpis.map((kpi,ki)=>(
+              {DIMENSIONS[activeDim].kpis.map((kpi,ki)=>(
                 <div key={kpi} style={{ display:"flex",alignItems:"center",gap:12,padding:"12px 15px",background:"rgba(255,255,255,0.03)",borderRadius:11,border:"1px solid rgba(255,255,255,0.05)" }}>
-                  <div style={{ width:26,height:26,borderRadius:7,background:PILLARS[activePillar].color+"22",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:800,color:PILLARS[activePillar].color }}>K{ki+1}</div>
+                  <div style={{ width:26,height:26,borderRadius:7,background:DIMENSIONS[activeDim].color+"22",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:800,color:DIMENSIONS[activeDim].color }}>K{ki+1}</div>
                   <span style={{ fontSize:13,color:"#CBD5E1",fontWeight:500 }}>{kpi}</span>
                   <div style={{ marginLeft:"auto",height:3,width:48,background:"#1E293B",borderRadius:999 }}>
-                    <div style={{ height:"100%",width:`${55+ki*12}%`,background:PILLARS[activePillar].color,borderRadius:999 }} />
+                    <div style={{ height:"100%",width:`${55+ki*12}%`,background:DIMENSIONS[activeDim].color,borderRadius:999 }} />
                   </div>
                 </div>
               ))}
             </div>
           </div>
           <div style={{ marginTop:18,padding:"16px 20px",background:"rgba(255,255,255,0.02)",borderRadius:12,border:"1px solid rgba(255,255,255,0.05)" }}>
-            <div style={{ fontSize:10,color:"#475569",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:10 }}>Portfolio Health Score Composition</div>
+            <div style={{ fontSize:10,color:"#475569",fontWeight:700,letterSpacing:".08em",textTransform:"uppercase",marginBottom:10 }}>Intelligence Weight Distribution</div>
             <div style={{ display:"flex",height:26,borderRadius:8,overflow:"hidden",gap:2 }}>
-              {PILLARS.map(p=>(
-                <div key={p.id} style={{ flex:parseInt(p.weight),background:p.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.9)",whiteSpace:"nowrap",overflow:"hidden" }}>{p.id} {p.weight}</div>
+              {DIMENSIONS.map(d=>(
+                <div key={d.id} style={{ flex:parseInt(d.weight),background:d.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:700,color:"rgba(255,255,255,0.9)",whiteSpace:"nowrap",overflow:"hidden" }}>{d.name.split(" ")[0]}</div>
               ))}
             </div>
           </div>
@@ -342,25 +411,25 @@ export default function AuctusAIWebsite() {
 
       <div className="divider" />
 
-      {/* PIPELINE */}
+      {/* ─── INTEGRATION PIPELINE ─── */}
       <section id="pipeline" style={{ padding:"90px 24px" }}>
         <div style={{ maxWidth:1100,margin:"0 auto" }}>
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:60 }}>
             <div>
-              <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",marginBottom:16 }}>End-to-End Pipeline</div>
-              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>Raw CSV to<br /><span className="gt">Intelligent Action</span></h2>
-              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>Six automated steps. Human-validated at every milestone. No manual script running — the API orchestrates everything on onboarding.</p>
+              <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",marginBottom:16 }}>Integration Strategy</div>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>Two Paths.<br /><span className="gt">One Intelligence Graph.</span></h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>Real-world integrations and demo environments converge to the same Context Graph. Whether data comes from SFDC via MCP or CSV via onboarding — the intelligence layer is identical.</p>
             </div>
             <SectionImg src="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&q=80" alt="AI data pipeline" height={240} />
           </div>
           <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(270px,1fr))",gap:18 }}>
             {[
-              {n:"01",t:"Provision & Ingest",d:"Upload 6 CSV files via the browser wizard. API validates schema, loads PostgreSQL, creates Qdrant embeddings — one automated step.",c:"#0EA5E9"},
-              {n:"02",t:"Wizard A — Journey Generator",d:"Transforms raw CSV into account journey timelines: events, milestones, 12-month health arcs. Context the Signal Analyst reasons over.",c:"#8B5CF6"},
-              {n:"03",t:"Wizard B — Pattern Analyzer",d:"Detects Proactive Growth, Churn Risk, and Recovery trajectories. Auto-generates early warning rules and success factors.",c:"#F59E0B"},
-              {n:"04",t:"Wizard C — Weight Optimizer",d:"Learns which KPIs and pillars predict outcomes in your data. L1/L2 weights recalibrate monthly — accuracy compounds over time.",c:"#10B981"},
-              {n:"05",t:"Signal Analyst Agent",d:"AI agent runs per account: KPI data from PostgreSQL + signals from Qdrant → natural-language health recommendation + playbook trigger.",c:"#EF4444"},
-              {n:"06",t:"Revenue Intelligence Reviews",d:"Monthly portfolio review. Every account must show forward movement. Stagnant accounts auto-escalate to a named playbook with CSM owner.",c:"#6366F1"},
+              {n:"01",t:"Inbound Webhooks (Day 1)",d:"CloudEvents webhook — zero friction. Push signals from any source. Account resolution: exact ID, domain, fuzzy name, or manual mapping.",c:"#0EA5E9"},
+              {n:"02",t:"Context API (Day 90)",d:"Read-only API for AI agents to query health, intelligence dimensions, revenue at risk, and story arc status. Full graph traversal.",c:"#8B5CF6"},
+              {n:"03",t:"MCP Server (Day 180)",d:"Native AI agent integration. Your agents connect directly to the Context Graph — SFDC, HubSpot, Intercom, Gainsight adapters included.",c:"#F59E0B"},
+              {n:"04",t:"CSV Onboarding (Demo Path)",d:"15 CSV types via browser wizard — 6 core + 9 context graph files. Story arc manifests auto-generate synthetic data for demos.",c:"#10B981"},
+              {n:"05",t:"Wizard A/B/C Pipeline",d:"Journey Generator, Pattern Analyzer, Weight Optimizer. Runs on onboarding and monthly recalibration. Context Graph enrichment built-in.",c:"#EF4444"},
+              {n:"06",t:"Story Arc Inference",d:"8 intelligence dimensions inferred from the Context Graph. Causal chains, decision evidence, outcome economics — all revenue-denominated.",c:"#6366F1"},
             ].map(s=>(
               <div key={s.n} className="glass" style={{ padding:"24px" }}>
                 <div style={{ width:40,height:40,borderRadius:11,background:s.c+"22",border:`1.5px solid ${s.c}55`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"Sora,sans-serif",fontSize:13,fontWeight:800,color:s.c,marginBottom:14 }}>{s.n}</div>
@@ -374,31 +443,42 @@ export default function AuctusAIWebsite() {
 
       <div className="divider" />
 
-      {/* REVENUE INTELLIGENCE */}
+      {/* ─── REVENUE INTELLIGENCE ─── */}
       <section id="rev-intel" style={{ padding:"90px 24px",background:"rgba(255,255,255,0.01)" }}>
         <div style={{ maxWidth:1100,margin:"0 auto" }}>
           <div style={{ display:"grid",gridTemplateColumns:"1.1fr 1fr",gap:60,alignItems:"center" }}>
             <div>
               <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",marginBottom:20 }}>Revenue Intelligence</div>
-              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:20 }}>Every Account.<br />Every Month.<br /><span className="gt">Forward.</span></h2>
-              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75,marginBottom:28 }}>Revenue Intelligence replaces lagging vanity metrics with a compounding improvement cadence. Each account is scored, tracked, and acted on monthly — with full explainability into which pillar drove the change.</p>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:20 }}>The Three Questions<br />Every Executive<br /><span className="gt">Must Answer.</span></h2>
+              <div style={{ display:"flex",flexDirection:"column",gap:14,marginBottom:28 }}>
+                {[
+                  ["What's the revenue at risk?","Context Graph maps every at-risk signal to dollar exposure in real time.","#EF4444"],
+                  ["What's the ROI of intervention?","Outcome Economics quantifies the cost of action vs. inaction for every account.","#10B981"],
+                  ["What happens if we don't act?","Story Arcs project churn probability, contraction timelines, and cascade effects.","#F59E0B"],
+                ].map(([q,a,color])=>(
+                  <div key={q} style={{ padding:"14px 18px",background:"rgba(255,255,255,0.03)",borderRadius:12,borderLeft:`3px solid ${color}` }}>
+                    <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9",marginBottom:4 }}>{q}</div>
+                    <div style={{ fontSize:13,color:"#64748B",lineHeight:1.6 }}>{a}</div>
+                  </div>
+                ))}
+              </div>
               <div style={{ borderRadius:14,overflow:"hidden",border:"1px solid rgba(255,255,255,0.07)" }}>
                 <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",background:"rgba(255,255,255,0.04)",padding:"10px 16px" }}>
-                  {["Period","Signal","Outcome"].map(h=>(
+                  {["Period","Signal","Revenue Impact"].map(h=>(
                     <div key={h} style={{ fontSize:10,fontWeight:700,color:"#475569",textTransform:"uppercase",letterSpacing:".06em" }}>{h}</div>
                   ))}
                 </div>
                 {[
-                  ["Month 1","Baseline set","Ref: 72 avg health"],
-                  ["Month 2","+1pt / account","73 → stabilizing"],
-                  ["Month 4","Compounding","75–76 avg"],
-                  ["Month 6","Momentum builds","78–79 avg"],
-                  ["Month 12","~12.7% compounded","82 avg · ARR protected"],
+                  ["Month 1","Baseline graph built","$42M ARR mapped"],
+                  ["Month 3","Risk patterns emerge","$3.2M flagged at risk"],
+                  ["Month 6","Interventions compound","$1.8M retained (55%)"],
+                  ["Month 9","Story arcs converge","$1.4M expanded"],
+                  ["Month 12","Full intelligence cycle","$3.2M net positive"],
                 ].map(([p,g,o],i)=>(
                   <div key={p} style={{ display:"grid",gridTemplateColumns:"1fr 1fr 1fr",padding:"11px 16px",background:i%2===0?"transparent":"rgba(255,255,255,0.02)",borderTop:"1px solid rgba(255,255,255,0.04)" }}>
                     <div style={{ fontSize:13,fontWeight:600,color:"#CBD5E1" }}>{p}</div>
                     <div style={{ fontSize:13,color:"#10B981",fontWeight:600 }}>{g}</div>
-                    <div style={{ fontSize:12,color:"#475569" }}>{o}</div>
+                    <div style={{ fontSize:12,color:"#F59E0B",fontWeight:600 }}>{o}</div>
                   </div>
                 ))}
               </div>
@@ -406,9 +486,9 @@ export default function AuctusAIWebsite() {
             <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
               <SectionImg src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80" alt="Revenue analytics" height={210} />
               {[
-                ["📌","Zero-exception rule","No account is exempt. Zero movement = named playbook with CSM owner + resolution date.","#0EA5E9"],
-                ["🔄","Wizard C recalibrates monthly","Health weights adjust from your outcomes — not a generic benchmark. The model earns accuracy.","#8B5CF6"],
-                ["🎯","Full playbook accountability","Every critical account: named playbook, P1/P2/P3 severity, assigned CSM, target date.","#F59E0B"],
+                ["💰","Revenue-denominated everything","Every signal, every recommendation, every story arc is expressed in dollar impact. No vanity metrics.","#10B981"],
+                ["🕸️","Causal traceability","The Context Graph shows exactly WHY an account is at risk — not just a score, but the full causal chain.","#8B5CF6"],
+                ["📊","Board-ready intelligence","Quarterly revenue intelligence reports with story arcs, intervention ROI, and portfolio trajectory.","#F59E0B"],
               ].map(([icon,title,desc,color])=>(
                 <div key={title} className="glass" style={{ padding:"18px 22px",display:"flex",gap:14 }}>
                   <div style={{ fontSize:22,flexShrink:0 }}>{icon}</div>
@@ -425,50 +505,14 @@ export default function AuctusAIWebsite() {
 
       <div className="divider" />
 
-      {/* PLAYBOOKS */}
-      <section style={{ padding:"90px 24px" }}>
-        <div style={{ maxWidth:1100,margin:"0 auto" }}>
-          <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center",marginBottom:50 }}>
-            <div>
-              <div className="pill" style={{ background:"rgba(239,68,68,0.1)",color:"#FCA5A5",border:"1px solid rgba(239,68,68,0.2)",marginBottom:16 }}>Playbook Engine</div>
-              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,42px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:16 }}>Trigger the Right Play<br /><span className="gt">at the Right Moment</span></h2>
-              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.75 }}>Seven trigger conditions with P1/P2/P3 severity routing. Each maps to a named playbook — from 30-day save plans to expansion pitch decks.</p>
-            </div>
-            <SectionImg src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" alt="Business strategy" height={240} />
-          </div>
-          <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:14 }}>
-            {[
-              ["P1","Health Score Critical","Score < 60 for 2+ months","Immediate CSM Escalation + Executive Sponsor Review","#EF4444"],
-              ["P1","Rapid Decline","Score drops >15pts in 30 days","Emergency QBR + Usage Recovery Plan","#EF4444"],
-              ["P2","At-Risk Plateau","Score 60–70 for 3+ months","Deep Dive Review + Pillar Analysis","#F59E0B"],
-              ["P2","Low Engagement","No CSM touchpoint in 45+ days","Check-in Campaign + Health Briefing","#F59E0B"],
-              ["P2","Qualitative Alert","Negative sentiment in 3+ comms","Champion Reactivation + Technical Review","#F59E0B"],
-              ["P3","Expansion Signal","Score >85 + low feature saturation","Upsell Opportunity Review + SKU Expansion","#10B981"],
-              ["P1","Churn Early Warning","Wizard B pattern: Churn Risk trajectory","30-Day Save Plan + C-Suite Engagement","#EF4444"],
-            ].map(([sev,title,cond,play,color])=>(
-              <div key={title} className="glass" style={{ padding:"18px 22px",borderLeft:`3px solid ${color}` }}>
-                <div style={{ display:"flex",alignItems:"center",gap:10,marginBottom:10 }}>
-                  <div className="pill" style={{ background:`${color}18`,color:color,border:`1px solid ${color}44` }}>{sev}</div>
-                  <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9" }}>{title}</div>
-                </div>
-                <div style={{ fontSize:11,color:"#64748B",marginBottom:7,fontStyle:"italic" }}>{cond}</div>
-                <div style={{ fontSize:12,color:"#94A3B8" }}>→ {play}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="divider" />
-
-      {/* ABOUT */}
+      {/* ─── ABOUT ─── */}
       <section id="about" style={{ padding:"90px 24px",background:"rgba(255,255,255,0.01)" }}>
         <div style={{ maxWidth:1100,margin:"0 auto" }}>
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center" }}>
             <div>
               <div className="pill" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:20 }}>About AuctusAI</div>
-              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,40px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:20 }}>Built by a<br /><span className="gt">Practitioner,</span><br />Not a Lab</h2>
-              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.8,marginBottom:24 }}>Founded by <strong style={{ color:"#CBD5E1" }}>Manoj Gupta</strong> — 25 years of enterprise technology leadership across Oracle, IBM, Accenture, and DXC. CS Pulse is built from direct experience in the gap between dashboards that look good and intelligence that actually prevents churn.</p>
+              <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(28px,3vw,40px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:20 }}>Built by a<br /><span className="gt">Revenue Practitioner,</span><br />Not a Lab</h2>
+              <p style={{ fontSize:15,color:"#64748B",lineHeight:1.8,marginBottom:24 }}>Founded by <strong style={{ color:"#CBD5E1" }}>Manoj Gupta</strong> — 25 years of enterprise technology leadership across Oracle, IBM, Accenture, and DXC. AuctusAI is built from direct experience in the gap between dashboards that look good and intelligence that actually protects revenue.</p>
               <div style={{ display:"flex",flexDirection:"column",gap:10 }}>
                 {[
                   ["🏢","Oracle","VP Product Engineering · 10 yrs · Fusion ERP, 5,000+ customers"],
@@ -492,29 +536,29 @@ export default function AuctusAIWebsite() {
                 <div style={{ fontFamily:"Sora,sans-serif",fontSize:36,fontWeight:800,color:"#F1F5F9",letterSpacing:"-0.03em",marginBottom:6 }}>auctus</div>
                 <div style={{ fontSize:13,color:"#64748B",fontStyle:"italic",marginBottom:14 }}>Latin: "increased · augmented · grown"</div>
                 <div style={{ height:1,background:"rgba(255,255,255,0.06)",marginBottom:14 }} />
-                <div style={{ fontSize:15,fontWeight:700,color:"#CBD5E1",lineHeight:1.5,marginBottom:8 }}>"Augmented Intelligence for Customer Growth"</div>
-                <div style={{ fontSize:12,color:"#475569" }}>One platform. Every vertical. Governed AI with human expertise at every step.</div>
+                <div style={{ fontSize:15,fontWeight:700,color:"#CBD5E1",lineHeight:1.5,marginBottom:8 }}>"Augmented Intelligence for Revenue Growth"</div>
+                <div style={{ fontSize:12,color:"#475569" }}>The System of Intelligence layer. Above CRM. Above CS platforms. Where revenue decisions get made.</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* LIVE DASHBOARD PREVIEW */}
+      {/* ─── LIVE DASHBOARD PREVIEW ─── */}
       <section style={{ padding:"60px 24px",background:"rgba(14,165,233,0.03)",borderTop:"1px solid rgba(14,165,233,0.08)" }}>
         <div style={{ maxWidth:900,margin:"0 auto" }}>
           <div style={{ textAlign:"center",marginBottom:36 }}>
-            <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",marginBottom:12 }}>● LIVE PREVIEW</div>
-            <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:30,fontWeight:800,letterSpacing:"-0.03em" }}>Portfolio Dashboard <span className="gt">Snapshot</span></h2>
+            <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",marginBottom:12 }}>LIVE PREVIEW</div>
+            <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:30,fontWeight:800,letterSpacing:"-0.03em" }}>Revenue Intelligence <span className="gt">Dashboard</span></h2>
           </div>
           <div style={{ background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:22,overflow:"hidden",boxShadow:"0 40px 120px rgba(0,0,0,0.5)" }}>
             <div style={{ padding:"14px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)",display:"flex",alignItems:"center",justifyContent:"space-between" }}>
               <div style={{ display:"flex",gap:6 }}>{["#FF5F57","#FEBC2E","#28C840"].map(c=><div key={c} style={{ width:11,height:11,borderRadius:"50%",background:c }} />)}</div>
-              <div style={{ fontSize:12,color:"#475569",fontWeight:600 }}>CS Pulse · Revenue Intelligence Dashboard</div>
-              <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",padding:"2px 10px" }}>● LIVE</div>
+              <div style={{ fontSize:12,color:"#475569",fontWeight:600 }}>AuctusAI · Revenue Intelligence Dashboard</div>
+              <div className="pill" style={{ background:"rgba(16,185,129,0.1)",color:"#34D399",border:"1px solid rgba(16,185,129,0.2)",padding:"2px 10px" }}>LIVE</div>
             </div>
             <div style={{ padding:"18px 20px",display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,borderBottom:"1px solid rgba(255,255,255,0.06)" }}>
-              {[["Portfolio Health","76.4","+2.1 ↑","#10B981"],["At Risk","4 accts","↓1 this mo.","#F59E0B"],["Critical","1 acct","P1 🔴","#EF4444"],["Expansion Signals","3","New ✨","#818CF8"]].map(([lbl,val,sub,col])=>(
+              {[["Revenue at Risk","$2.8M","↓ $340K saved","#EF4444"],["ARR Protected","$18.4M","97.4% retention","#10B981"],["Expansion Pipeline","$1.7M","3 accounts ready","#818CF8"],["Intervention ROI","3.8x","Last quarter","#F59E0B"]].map(([lbl,val,sub,col])=>(
                 <div key={lbl} style={{ background:"rgba(255,255,255,0.03)",borderRadius:11,padding:"12px 14px",border:"1px solid rgba(255,255,255,0.05)" }}>
                   <div style={{ fontSize:10,color:"#64748B",marginBottom:5,textTransform:"uppercase",letterSpacing:".07em" }}>{lbl}</div>
                   <div style={{ fontSize:22,fontWeight:800,color:"#F1F5F9",fontFamily:"Sora,sans-serif" }}>{val}</div>
@@ -523,19 +567,20 @@ export default function AuctusAIWebsite() {
               ))}
             </div>
             <div style={{ padding:"16px 20px" }}>
-              <div style={{ fontSize:11,color:"#475569",fontWeight:700,letterSpacing:".07em",textTransform:"uppercase",marginBottom:12 }}>Account Health Snapshot</div>
+              <div style={{ fontSize:11,color:"#475569",fontWeight:700,letterSpacing:".07em",textTransform:"uppercase",marginBottom:12 }}>Account Revenue Intelligence</div>
               {[
-                ["CloudScale AI Labs",88,"#10B981","Healthy","P1-KPI1 ↑"],
-                ["Nexus Research Inst.",62,"#F59E0B","At-Risk","Escalation signal"],
-                ["Vertex HPC Systems",91,"#10B981","Healthy","Expansion ready"],
-                ["DataForge Inc.",45,"#EF4444","Critical","Playbook active 🔴"],
-                ["OmniCloud Solutions",74,"#F59E0B","At-Risk","QBR pending"],
-              ].map(([name,score,col,status,note])=>(
-                <div key={name} style={{ display:"grid",gridTemplateColumns:"1fr 140px 90px",alignItems:"center",gap:12,padding:"9px 0",borderBottom:"1px solid rgba(255,255,255,0.04)" }}>
+                ["CloudScale AI Labs","$4.2M ARR",88,"#10B981","Expanding","Expansion signal strong"],
+                ["Nexus Research Inst.","$2.8M ARR",62,"#F59E0B","At-Risk","Champion departed"],
+                ["Vertex HPC Systems","$5.1M ARR",91,"#10B981","Healthy","Upsell in progress"],
+                ["DataForge Inc.","$1.9M ARR",45,"#EF4444","Critical","$1.4M at risk"],
+                ["OmniCloud Solutions","$3.4M ARR",74,"#F59E0B","At-Risk","Decision pending"],
+              ].map(([name,arr,score,col,status,note])=>(
+                <div key={name} style={{ display:"grid",gridTemplateColumns:"1.2fr 0.7fr 140px 90px",alignItems:"center",gap:12,padding:"9px 0",borderBottom:"1px solid rgba(255,255,255,0.04)" }}>
                   <div>
                     <div style={{ fontSize:13,fontWeight:600,color:"#E2E8F0" }}>{name}</div>
                     <div style={{ fontSize:11,color:"#475569",marginTop:1 }}>{note}</div>
                   </div>
+                  <div style={{ fontSize:12,color:"#94A3B8",fontWeight:600 }}>{arr}</div>
                   <HealthBar score={score} color={col} />
                   <div className="pill" style={{ background:`${col}18`,color:col,border:`1px solid ${col}33`,fontSize:10 }}>{status}</div>
                 </div>
@@ -545,15 +590,15 @@ export default function AuctusAIWebsite() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ─── CTA ─── */}
       <section id="contact" style={{ padding:"90px 24px",position:"relative",overflow:"hidden" }}>
         <div style={{ position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(14,165,233,0.04),rgba(99,102,241,0.04))",pointerEvents:"none" }} />
         <div style={{ maxWidth:660,margin:"0 auto",textAlign:"center",position:"relative" }}>
-          <div className="pill" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:20 }}>Get Started</div>
-          <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(30px,4vw,46px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:18 }}>Ready to Make Every Account<br /><span className="gt">Move Forward?</span></h2>
-          <p style={{ fontSize:16,color:"#64748B",lineHeight:1.7,marginBottom:40 }}>Request a demo — we'll run CS Pulse against a synthetic dataset matching your vertical. No commitment, no production data required.</p>
+          <div className="pill" style={{ background:"rgba(14,165,233,0.1)",color:"#38BDF8",border:"1px solid rgba(14,165,233,0.2)",marginBottom:20 }}>For CROs, CFOs & CEOs</div>
+          <h2 style={{ fontFamily:"Sora,sans-serif",fontSize:"clamp(30px,4vw,46px)",fontWeight:800,letterSpacing:"-0.03em",marginBottom:18 }}>Know Your Revenue at Risk.<br /><span className="gt">Act Before It's Lost.</span></h2>
+          <p style={{ fontSize:16,color:"#64748B",lineHeight:1.7,marginBottom:40 }}>Request a demo — we'll show you the Context Graph, Story Arcs, and Revenue Intelligence engine against a dataset matching your vertical. No commitment, no production data required.</p>
           <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:16,marginBottom:32 }}>
-            {[["🔬","Live Platform Demo","See the 5-pillar dashboard, Signal Analyst, and playbook triggers in action."],["📊","Portfolio Health Pilot","Bring your data. Health scoring analysis in 2 weeks — no setup needed."]].map(([icon,title,sub])=>(
+            {[["💰","Revenue Impact Assessment","See revenue at risk across a demo portfolio. Context Graph traces every dollar to root cause."],["📊","Intelligence Dimension Pilot","Bring your data. Full 8-dimension intelligence analysis in 2 weeks — no setup needed."]].map(([icon,title,sub])=>(
               <div key={title} className="glass" style={{ padding:"22px",textAlign:"left" }}>
                 <div style={{ fontSize:26,marginBottom:10 }}>{icon}</div>
                 <div style={{ fontSize:14,fontWeight:700,color:"#F1F5F9",marginBottom:6 }}>{title}</div>
@@ -562,13 +607,13 @@ export default function AuctusAIWebsite() {
             ))}
           </div>
           <div style={{ display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap" }}>
-            <a href="mailto:manoj.gupta@auctusai.ai" className="btnp" style={{ padding:"15px 34px",fontSize:15,borderRadius:11,textDecoration:"none",display:"inline-block" }}>Contact Us →</a>
+            <a href="mailto:manoj.gupta@auctusai.ai" className="btnp" style={{ padding:"15px 34px",fontSize:15,borderRadius:11,textDecoration:"none",display:"inline-block" }}>Contact Us</a>
             <a href="https://auctusai.ai" className="btng" style={{ padding:"15px 26px",fontSize:15,borderRadius:11,textDecoration:"none",display:"inline-block" }}>Visit auctusai.ai</a>
           </div>
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* ─── FOOTER ─── */}
       <footer style={{ borderTop:"1px solid rgba(255,255,255,0.06)",padding:"40px 24px 28px",background:"rgba(0,0,0,0.3)" }}>
         <div style={{ maxWidth:1100,margin:"0 auto" }}>
           <div style={{ display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr",gap:36,marginBottom:36 }}>
@@ -577,12 +622,12 @@ export default function AuctusAIWebsite() {
                 <div style={{ width:30,height:30,borderRadius:8,background:"linear-gradient(135deg,#0EA5E9,#6366F1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16 }}>⚡</div>
                 <div style={{ fontFamily:"Sora,sans-serif",fontWeight:800,fontSize:15,color:"#F1F5F9" }}>AuctusAI</div>
               </div>
-              <p style={{ fontSize:12,color:"#475569",lineHeight:1.7,maxWidth:240 }}>CS Pulse — AI-native revenue intelligence for datacenter and enterprise verticals.</p>
+              <p style={{ fontSize:12,color:"#475569",lineHeight:1.7,maxWidth:260 }}>Revenue Intelligence — the System of Intelligence layer above CRM and CS platforms. Built for executives who protect and grow recurring revenue.</p>
               <div style={{ marginTop:12,fontSize:11,color:"#334155" }}>manoj.gupta@auctusai.ai</div>
             </div>
             {[
-              ["Platform",["5-Pillar Model","Signal Analyst","Playbook Engine","Revenue Intelligence","Synthetic Data"]],
-              ["Technology",["Qdrant Vector DB","Wizard A/B/C","Agentic AI","PostgreSQL","Multi-Tenant"]],
+              ["Intelligence",["Context Graph","Story Arcs","Revenue at Risk","Outcome Economics","Signal Analyst"]],
+              ["Platform",["MCP Integration","Webhook API","Self-Learning Weights","Multi-Tenant","Enterprise Security"]],
               ["Company",["About","Request Demo","Contact","Privacy","Terms"]],
             ].map(([heading,links])=>(
               <div key={heading}>
