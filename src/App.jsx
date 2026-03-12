@@ -382,7 +382,7 @@ export default function AuctusAIWebsite() {
               </div>
             </div>
             <div style={{ display:"flex",flexDirection:"column",gap:16 }}>
-              <SectionImg src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" alt="Analytics visualization" height={200} />
+              <SectionImg src="/images/context-graph.png" alt="Context Graph Explorer — Signal to Decision to Outcome causal chains" height={200} />
               <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:12 }}>
                 {[
                   ["\u{1F4B0}","Power-of-1","What\u2019s a 1% NRR improvement worth? Connected to specific KPIs you can move."],
