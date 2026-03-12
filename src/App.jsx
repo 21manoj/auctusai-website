@@ -768,7 +768,7 @@ export default function AuctusAIWebsite() {
               <div key={heading}>
                 <div style={{ fontSize:11,fontWeight:700,color:"#475569",textTransform:"uppercase",letterSpacing:".08em",marginBottom:14 }}>{heading}</div>
                 <div style={{ display:"flex",flexDirection:"column",gap:9 }}>
-                  {(links[]).map(l=>(
+                  {links.map(l=>(
                     <a key={l} href="#" style={{ fontSize:12,color:"#334155",textDecoration:"none" }}
                       onMouseEnter={e=>(e.target).style.color="#0EA5E9"}
                       onMouseLeave={e=>(e.target).style.color="#334155"}>
