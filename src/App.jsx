@@ -135,7 +135,11 @@ function HexPrism() {
 
 export default function AuctusAIWebsite() {
   const [activePillar, setActivePillar] = useState(0);
-  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
+  const scrollTo = (id) => {
+    if (typeof document !== "undefined") {
+      document.getElementById(id)?.scrollIntoView({ behavior:"smooth" });
+    }
+  };
 
   return (
     <div style={{ fontFamily:"'DM Sans',system-ui,sans-serif", background:"#060B18", color:"#E2E8F0", overflowX:"hidden" }}>
