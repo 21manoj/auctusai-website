@@ -39,6 +39,15 @@
   --signal-ink: #B85E1E;  /* amber, darkened for AA contrast on white */
   --resolve-ink: #1D7A6C; /* cyan, darkened for AA contrast on white */
 
+  /* Colorful dark-section background — layered radial blends (not one linear sweep,
+     which would muddy orange/teal into brown-grey in the middle) over a warm-black base. */
+  --bg-colorful:
+    radial-gradient(ellipse 85% 65% at 12% 8%, rgba(255,138,61,0.65), transparent 60%),
+    radial-gradient(ellipse 90% 75% at 92% 100%, rgba(79,216,196,0.6), transparent 62%),
+    radial-gradient(ellipse 60% 70% at 55% 45%, rgba(255,178,122,0.28), transparent 70%),
+    radial-gradient(ellipse 70% 60% at 25% 100%, rgba(45,180,160,0.3), transparent 65%),
+    #150F0B;
+
   /* --- Type --- */
   --font-display: 'Plus Jakarta Sans', 'Arial', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -225,7 +234,7 @@ p { margin: 0 0 1em; color: var(--lt-text-dim); }
 /* --- Hero --- */
 .hero {
   padding: 88px 0 96px;
-  background: var(--bg);
+  background: var(--bg-colorful);
   color: var(--text);
   border-bottom: 1px solid var(--border);
   position: relative;
@@ -722,10 +731,10 @@ p { margin: 0 0 1em; color: var(--lt-text-dim); }
 .cred-detail { font-size: 12.5px; color: var(--lt-text-faint); text-align: right; }
 
 /* --- Final CTA --- */
-.cta-section {
+.section.cta-section {
   border-bottom: none;
   padding-bottom: 110px;
-  background: var(--bg);
+  background: var(--bg-colorful);
   color: var(--text);
 }
 .cta-section p { color: var(--text-dim); }
@@ -743,7 +752,7 @@ p { margin: 0 0 1em; color: var(--lt-text-dim); }
 /* --- Footer --- */
 footer {
   padding: 56px 0 40px;
-  background: var(--bg);
+  background: var(--bg-colorful);
   color: var(--text);
 }
 .footer-grid {
@@ -987,7 +996,7 @@ footer {
 /* --- Blog index page header --- */
 .blog-index-hero {
   padding: 72px 0 56px;
-  background: var(--bg);
+  background: var(--bg-colorful);
   color: var(--text);
   border-bottom: 1px solid var(--border);
   position: relative;
@@ -1014,7 +1023,7 @@ footer {
 /* --- Individual post: header/banner --- */
 .post-hero {
   padding: 64px 0 56px;
-  background: var(--bg);
+  background: var(--bg-colorful);
   color: var(--text);
   border-bottom: 1px solid var(--border);
   position: relative;
