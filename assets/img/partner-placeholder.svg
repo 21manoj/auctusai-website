@@ -1,36 +1,39 @@
 <svg width="600" height="450" viewBox="0 0 600 450" xmlns="http://www.w3.org/2000/svg">
-  <rect width="600" height="450" fill="#14171C"/>
   <defs>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#262B33" stroke-width="1"/>
-    </pattern>
+    <radialGradient id="warmWash" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FFF6EC"/>
+      <stop offset="100%" stop-color="#F8F5EF"/>
+    </radialGradient>
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
   </defs>
-  <rect width="600" height="450" fill="url(#grid)"/>
+  <rect width="600" height="450" rx="20" fill="url(#warmWash)"/>
 
-  <!-- central node -->
-  <circle cx="300" cy="225" r="26" fill="#0B0D10" stroke="#FF8A3D" stroke-width="2"/>
-  <circle cx="300" cy="225" r="6" fill="#FF8A3D"/>
-
-  <!-- partner nodes -->
-  <g stroke="#363D48" stroke-width="1.5">
-    <line x1="300" y1="225" x2="150" y2="120"/>
-    <line x1="300" y1="225" x2="150" y2="330"/>
-    <line x1="300" y1="225" x2="450" y2="120"/>
-    <line x1="300" y1="225" x2="450" y2="330"/>
-    <line x1="300" y1="225" x2="120" y2="225"/>
-    <line x1="300" y1="225" x2="480" y2="225"/>
+  <g fill="none" stroke="#E7DFCF" stroke-width="1.5" stroke-linecap="round">
+    <path d="M300,225 C240,190 200,160 158,132"/>
+    <path d="M300,225 C240,260 200,300 158,328"/>
+    <path d="M300,225 C360,190 400,160 442,132"/>
+    <path d="M300,225 C360,260 400,300 442,328"/>
+    <path d="M300,225 C240,225 180,225 128,225"/>
+    <path d="M300,225 C360,225 420,225 472,225"/>
   </g>
 
-  <g fill="#191D24" stroke="#4FD8C4" stroke-width="1.5">
-    <circle cx="150" cy="120" r="14"/>
-    <circle cx="150" cy="330" r="14"/>
-    <circle cx="450" cy="120" r="14"/>
-    <circle cx="450" cy="330" r="14"/>
-    <circle cx="120" cy="225" r="14"/>
-    <circle cx="480" cy="225" r="14"/>
+  <g opacity="0.5" filter="url(#softGlow)">
+    <circle cx="158" cy="132" r="26" fill="#FF8A3D"/>
+    <circle cx="442" cy="328" r="26" fill="#4FD8C4"/>
+    <circle cx="300" cy="225" r="34" fill="#FFB27A"/>
   </g>
 
-  <text x="300" y="410" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="#5A6270" letter-spacing="1">
-    PARTNER NETWORK · SHARED VISIBILITY
-  </text>
+  <g stroke-width="2.5">
+    <circle cx="158" cy="132" r="16" fill="#FFF" stroke="#FF8A3D"/>
+    <circle cx="158" cy="328" r="16" fill="#FFF" stroke="#F0B990"/>
+    <circle cx="442" cy="132" r="16" fill="#FFF" stroke="#7FE3D3"/>
+    <circle cx="442" cy="328" r="16" fill="#FFF" stroke="#4FD8C4"/>
+    <circle cx="128" cy="225" r="16" fill="#FFF" stroke="#F0B990"/>
+    <circle cx="472" cy="225" r="16" fill="#FFF" stroke="#7FE3D3"/>
+  </g>
+
+  <circle cx="300" cy="225" r="30" fill="#FF8A3D"/>
+  <circle cx="300" cy="225" r="30" fill="none" stroke="#FFFFFF" stroke-width="3"/>
 </svg>
