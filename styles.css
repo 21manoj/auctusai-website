@@ -379,6 +379,12 @@ p { margin: 0 0 1em; color: var(--lt-text-dim); }
 .demo-slot.has-video video { display: block; }
 .demo-slot.has-video .demo-slot__placeholder { display: none; }
 
+/* A real clip is 16:9 with burned-in captions along the bottom. `cover` would
+   crop those captions off in the 16:10 compact slots, so once a video is
+   actually loaded the slot takes the clip's own ratio and nothing is cut. */
+.demo-slot.has-video { aspect-ratio: 16 / 9; }
+.demo-slot.has-video video { object-fit: contain; background: #05070C; }
+
 .demo-slot__placeholder {
   position: absolute;
   inset: 0;

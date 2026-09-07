@@ -1,6 +1,7 @@
 /**
  * AuctusAI marketing site — interactions.
- *   1. Demo video auto-loader (drop an .mp4 at data-src, no HTML edits)
+ *   1. Demo video loader — real <video controls> when a file exists at
+ *      data-src, the slot's placeholder as the fallback when it does not
  *   2. Scroll-reveal for sections/cards
  *   3. Count-up for hero metrics
  *   4. Animated Watch→Detect→Act→Prove signal chain
@@ -11,7 +12,15 @@ const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* -------- 1. Demo video auto-loader -------- */
+  /* -------- 1. Demo video auto-loader --------
+     Wires a real player when a file exists at data-src; otherwise the slot's
+     placeholder markup stays put as the fallback, so a slot whose clip has not
+     been recorded yet keeps working exactly as it did.
+
+     Playback is the browser's own <video controls>: a real scrubber, so a
+     visitor can rewind and replay a demo instead of watching it go past once.
+     We deliberately do NOT attach our own click-to-toggle — native controls
+     already toggle on click, and a second handler would cancel them out. */
   document.querySelectorAll('.demo-slot[data-src]').forEach((slot) => {
     const src = slot.getAttribute('data-src');
     const videoEl = slot.querySelector('video');
@@ -20,19 +29,23 @@ document.addEventListener('DOMContentLoaded', () => {
       .then((res) => {
         if (!res.ok) return;
         videoEl.src = src;
+        videoEl.setAttribute('controls', '');       // scrub · rewind · replay
+        videoEl.setAttribute('playsinline', '');
         videoEl.load();
         slot.classList.add('has-video');
+        videoEl.addEventListener('play', () => slot.classList.add('is-playing'));
+        videoEl.addEventListener('pause', () => slot.classList.remove('is-playing'));
+
         if (slot.dataset.cover) {
-          // Cover mode (01–03): show the poster with its play button + themes,
-          // start playing only when the visitor clicks. No autoplay.
+          // Cover mode (the captioned walkthroughs): poster frame first, play on
+          // the visitor's click. Never autoplay, and never loop — these are
+          // watched deliberately, and a loop would fight the scrubber.
           videoEl.removeAttribute('autoplay');
+          videoEl.removeAttribute('loop');
           slot.classList.add('is-cover');
-          const toggle = () => { videoEl.paused ? videoEl.play().catch(() => {}) : videoEl.pause(); };
-          videoEl.addEventListener('click', toggle);
-          videoEl.addEventListener('play', () => slot.classList.add('is-playing'));
-          videoEl.addEventListener('pause', () => slot.classList.remove('is-playing'));
-        } else {
-          // Autoplay loop (the CTA teaser).
+        } else if (!REDUCED) {
+          // Ambient loop (the CTA teaser). Muted autoplay only; anyone who asked
+          // for reduced motion gets the poster frame and the play button.
           videoEl.setAttribute('autoplay', '');
           videoEl.play().catch(() => {});
         }
