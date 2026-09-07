@@ -21,6 +21,56 @@ document.addEventListener('DOMContentLoaded', () => {
      visitor can rewind and replay a demo instead of watching it go past once.
      We deliberately do NOT attach our own click-to-toggle — native controls
      already toggle on click, and a second handler would cancel them out. */
+
+  /* A scrubber is only real if seeking works. Our host answers HTTP Range
+     requests with a plain 200 and no Accept-Ranges (verified against the live
+     site: `Range: bytes=0-999` returns the whole file), and Chrome then reports
+     seekable = [0,0] — the scrubber is drawn, but every seek snaps back to 0.
+
+     So: measure it, and only if the host really is not range-capable, pull the
+     clip down once and hand the element a blob URL, which is always seekable.
+     Where Range is honoured this costs nothing and does not run. The fetch is
+     deferred until the slot is near the viewport, so a visitor who never
+     scrolls to a demo never pays for it; clips are ~0.5-1.3 MB. */
+  function ensureSeekable(slot, videoEl, src) {
+    const seekableToEnd = () => {
+      const d = videoEl.duration;
+      if (!d || !isFinite(d) || !videoEl.seekable.length) return false;
+      return videoEl.seekable.end(videoEl.seekable.length - 1) >= d - 0.5;
+    };
+
+    const swapInBlob = () => {
+      fetch(src)
+        .then((r) => (r.ok ? r.blob() : null))
+        .then((blob) => {
+          if (!blob || videoEl.dataset.blobbed) return;
+          videoEl.dataset.blobbed = '1';
+          const at = videoEl.currentTime;
+          const wasPlaying = !videoEl.paused;
+          const objectUrl = URL.createObjectURL(blob);
+          videoEl.addEventListener('loadedmetadata', function restore() {
+            videoEl.removeEventListener('loadedmetadata', restore);
+            if (at > 0) videoEl.currentTime = at;
+            if (wasPlaying) videoEl.play().catch(() => {});
+          });
+          videoEl.src = objectUrl;
+          videoEl.load();
+          window.addEventListener('pagehide', () => URL.revokeObjectURL(objectUrl), { once: true });
+        })
+        .catch(() => {});
+    };
+
+    videoEl.addEventListener('loadedmetadata', function check() {
+      videoEl.removeEventListener('loadedmetadata', check);
+      if (seekableToEnd()) return;                 // host handles Range — nothing to do
+      if (!('IntersectionObserver' in window)) { swapInBlob(); return; }
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach((e) => { if (e.isIntersecting) { obs.disconnect(); swapInBlob(); } });
+      }, { rootMargin: '400px' });
+      io.observe(slot);
+    });
+  }
+
   document.querySelectorAll('.demo-slot[data-src]').forEach((slot) => {
     const src = slot.getAttribute('data-src');
     const videoEl = slot.querySelector('video');
@@ -28,9 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(src, { method: 'HEAD' })
       .then((res) => {
         if (!res.ok) return;
-        videoEl.src = src;
         videoEl.setAttribute('controls', '');       // scrub · rewind · replay
         videoEl.setAttribute('playsinline', '');
+        ensureSeekable(slot, videoEl, src);         // must be armed before load()
+        videoEl.src = src;
         videoEl.load();
         slot.classList.add('has-video');
         videoEl.addEventListener('play', () => slot.classList.add('is-playing'));
