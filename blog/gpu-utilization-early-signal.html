@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPU Utilization Is Talking. Is Anyone Listening? — AuctusAI Blog</title>
+<meta name="description" content="For AI chip companies, server OEMs, and data centers, utilization curves say more about renewal risk than any support ticket ever will. Here's how to read them.">
+
+<meta property="og:title" content="GPU Utilization Is Talking. Is Anyone Listening? — AuctusAI Blog">
+<meta property="og:description" content="Utilization curves say more about renewal risk than any support ticket ever will. Here's how to read them.">
+<meta property="og:image" content="../assets/img/og-image.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://auctusai.ai/blog/gpu-utilization-early-signal.html">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/img/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../assets/img/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="../assets/img/android-chrome-512x512.png">
+<meta name="theme-color" content="#0B0D10">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+
+<!-- =========================================================
+     NAV
+========================================================= -->
+<nav class="nav">
+  <div class="wrap">
+    <a href="../index.html#top" class="brand">
+      <img src="../assets/img/logo-mark.svg" alt="" class="brand-mark">
+      AuctusAI
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#narratives">Outcomes</a>
+      <a href="../index.html#verticals">Verticals</a>
+      <a href="../index.html#security">Security</a>
+      <a href="index.html">Blog</a>
+    </div>
+    <div class="nav-cta btn-row">
+      <a href="#" class="btn btn-ghost">Sign In</a>
+      <a href="../index.html#cta" class="btn btn-primary">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================================================
+     POST HEADER
+========================================================= -->
+<header class="post-hero" id="top">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Blog</a> <span>/</span> <span>AI Infrastructure Metrics</span></div>
+    <div class="eyebrow">AI Infrastructure Metrics</div>
+    <h1>GPU Utilization Is Talking. Is Anyone Listening?</h1>
+    <div class="post-meta-row">
+      <span>August 5, 2026</span>
+      <span>·</span>
+      <span>5 min read</span>
+    </div>
+  </div>
+</header>
+
+<!-- =========================================================
+     POST BODY
+========================================================= -->
+<article class="post-article">
+  <div class="wrap post-body">
+
+    <p>Ask most CS teams what predicts renewal, and you'll hear about ticket volume, NPS, or how the last call "felt." Ask an AI chip company, server OEM, or data center operator what actually moves the needle, and the answer is quieter and far more precise: utilization.</p>
+
+    <p>GPU utilization, training throughput, inference latency, capacity trend, PUE — these aren't support metrics. They're the customer's own infrastructure telling you, continuously and without spin, whether they're getting enough value to keep paying for it.</p>
+
+    <h2>Why utilization beats sentiment</h2>
+
+    <p>Sentiment is self-reported and easy to perform. A stakeholder can tell you everything is great on a call and still be running a competitive bake-off in parallel. Utilization doesn't perform for anyone — a workload is either running on the hardware or it isn't.</p>
+
+    <p>That's what makes it such a reliable early signal in this vertical specifically. A slow, sustained drop in GPU utilization across two or three accounts rarely means those teams stopped needing compute. It means the workload moved — to underused capacity elsewhere, to a competitor's cluster, or to a project that's been quietly deprioritized. All three are churn risk. None of them show up in a support queue.</p>
+
+    <blockquote class="post-pullquote">A support ticket tells you someone had a problem and said something. A utilization curve tells you what's actually happening, whether anyone says anything or not.</blockquote>
+
+    <h2>The metric changes by vertical — the principle doesn't</h2>
+
+    <p>What counts as the leading signal isn't identical across infrastructure businesses, which is exactly why a generic health score built for SaaS falls flat here:</p>
+
+    <ul>
+      <li><strong>AI chip companies</strong> — GPU utilization, training throughput, and inference latency show whether adoption is deepening or stalling.</li>
+      <li><strong>Server OEMs</strong> — time-to-first-workload and RMA rate say more about stickiness than any relationship score.</li>
+      <li><strong>Data centers</strong> — PUE, thermal score, and capacity trend point directly at whether a customer's growth trajectory is up or flat.</li>
+      <li><strong>Cloud infrastructure</strong> — compute-hour trends and workload diversity reveal intent before a renewal conversation ever starts.</li>
+    </ul>
+
+    <p>The principle underneath all four is the same: watch the resource the customer actually uses, not a proxy for how they say they feel about it.</p>
+
+    <h2>From metric to action</h2>
+
+    <p>A utilization drop on its own is a data point. It becomes an action item when it's read alongside the rest of the account — a champion change, a deferred QBR, a competitive signal — and routed to the person who owns the account with a specific next step, not just a lower score on a dashboard. That's the difference between monitoring a metric and actually using it.</p>
+
+    <p>Track the right number, watch it in context, and the renewal conversation stops being a surprise.</p>
+
+    <div class="post-cta">
+      <h4>Get a health model built for your vertical</h4>
+      <p>CS Pulse calibrates its health model to what your infrastructure actually reports — then recalibrates monthly from your own outcomes.</p>
+      <div class="btn-row">
+        <a href="../index.html#cta" class="btn btn-primary">Request a Demo</a>
+      </div>
+    </div>
+
+    <div class="post-byline">
+      <span>Published by the AuctusAI team</span>
+      <a href="index.html">← Back to all articles</a>
+    </div>
+
+  </div>
+</article>
+
+<!-- =========================================================
+     RELATED POSTS
+========================================================= -->
+<section class="related-posts">
+  <div class="wrap">
+    <h3>More from the Blog</h3>
+    <div class="post-grid">
+      <a class="post-card" href="the-health-score-that-lied.html">
+        <span class="post-card__tag">Churn Signals</span>
+        <h3>The Health Score That Lied</h3>
+        <p>Why single-number scores miss the accounts most likely to churn — and what to watch instead.</p>
+        <span class="post-card__meta">August 18, 2026 · 6 min read</span>
+      </a>
+      <a class="post-card" href="partner-channel-health-signal.html">
+        <span class="post-card__tag">Channel &amp; Partners</span>
+        <h3>Your Channel Partners Are Running Accounts From Spreadsheets</h3>
+        <p>When a partner goes quiet, that silence is a lead indicator — not paperwork to catch up on later.</p>
+        <span class="post-card__meta">July 10, 2026 · 4 min read</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="../index.html#top" class="brand"><img src="../assets/img/logo-mark.svg" alt="" class="brand-mark">AuctusAI</a>
+        <p style="margin-top:14px;">CS Pulse — the customer success platform for AI infrastructure companies. Signal-driven. Revenue-connected.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#narratives">Outcomes</a>
+        <a href="../index.html#verticals">Verticals</a>
+        <a href="../index.html#security">Security</a>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <a href="index.html">Blog</a>
+        <a href="the-health-score-that-lied.html">Churn Signals</a>
+        <a href="gpu-utilization-early-signal.html">Infra Metrics</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#cta">Request Demo</a>
+        <a href="mailto:hello@auctusai.ai">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AuctusAI Inc. All rights reserved.</span>
+      <span>auctus — Latin for "growth through augmentation"</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>

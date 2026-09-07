@@ -1,32 +1,574 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Primary meta -->
-    <title>AuctusAI · CS Pulse — Customer Success for AI Infrastructure</title>
-    <meta name="description" content="CS Pulse turns operational signals—GPU utilization, champion drop-off, competitive POCs—into playbooks and revenue outcomes. Purpose-built for AI chip companies, server OEMs, and data centers." />
-    <link rel="canonical" href="https://auctusai.ai/" />
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS Pulse by AuctusAI — Stop Silent Churn Before It Costs You the Renewal</title>
+<meta name="description" content="CS Pulse turns the signals already in your accounts — GPU utilization, champion drop-off, competitive POCs — into ranked playbooks and protected revenue. Built for AI chip companies, server OEMs, and data centers.">
 
-    <!-- Open Graph (LinkedIn, Slack, Facebook) -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="AuctusAI" />
-    <meta property="og:title" content="CS Pulse — Customer Success for AI Infrastructure" />
-    <meta property="og:description" content="Your accounts are telling you everything—CS Pulse hears it. Operational signals become playbooks and revenue outcomes. Built for AI chip cos, server OEMs, and data centers." />
-    <meta property="og:url" content="https://auctusai.ai/" />
-    <meta property="og:image" content="https://auctusai.ai/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+<meta property="og:title" content="CS Pulse by AuctusAI — Stop Silent Churn Before It Costs You the Renewal">
+<meta property="og:description" content="Your accounts are telling you everything. CS Pulse is how your CS team hears it — before the QBR, not after the renewal.">
+<meta property="og:image" content="/assets/img/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://auctusai.ai/">
+<meta name="twitter:card" content="summary_large_image">
 
-    <!-- Twitter / X Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="CS Pulse — Customer Success for AI Infrastructure" />
-    <meta name="twitter:description" content="Operational signals become playbooks and revenue outcomes. Purpose-built for AI infrastructure." />
-    <meta name="twitter:image" content="https://auctusai.ai/og-image.png" />
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/img/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/img/android-chrome-512x512.png">
+<meta name="theme-color" content="#0B0D10">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- =========================================================
+     NAV
+========================================================= -->
+<nav class="nav">
+  <div class="wrap">
+    <a href="#top" class="brand">
+      <img src="assets/img/logo-mark.svg" alt="" class="brand-mark">
+      AuctusAI
+    </a>
+    <div class="nav-links">
+      <a href="#how-it-works">How It Works</a>
+      <a href="#narratives">Outcomes</a>
+      <a href="#verticals">Verticals</a>
+      <a href="#security">Security</a>
+      <a href="blog/index.html">Blog</a>
+    </div>
+    <div class="nav-cta btn-row">
+      <a href="#" class="btn btn-ghost">Sign In</a>
+      <a href="#cta" class="btn btn-primary">Request Demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+<header class="hero" id="top">
+  <svg class="hero-illustration" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <radialGradient id="blobA" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FF8A3D" stop-opacity="0.16"/>
+        <stop offset="100%" stop-color="#FF8A3D" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="blobB" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#4FD8C4" stop-opacity="0.14"/>
+        <stop offset="100%" stop-color="#4FD8C4" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="1060" cy="180" r="260" fill="url(#blobA)"/>
+    <circle cx="1230" cy="520" r="240" fill="url(#blobB)"/>
+    <g fill="none" stroke-linecap="round">
+      <path d="M760,120 C880,90 950,180 1040,170" stroke="#FF8A3D" stroke-width="1.5" opacity="0.35"/>
+      <path d="M1040,170 C1110,160 1150,230 1230,240" stroke="#4FD8C4" stroke-width="1.5" opacity="0.3"/>
+      <path d="M900,300 C990,280 1060,340 1160,330" stroke="#FF8A3D" stroke-width="1.5" opacity="0.28"/>
+      <path d="M980,420 C1070,400 1120,460 1220,450" stroke="#4FD8C4" stroke-width="1.5" opacity="0.32"/>
+      <path d="M1160,330 C1200,360 1190,410 1220,450" stroke="#FF8A3D" stroke-width="1.5" opacity="0.22" stroke-dasharray="4 5"/>
+      <path d="M1230,240 C1260,290 1240,340 1220,450" stroke="#4FD8C4" stroke-width="1.5" opacity="0.22" stroke-dasharray="4 5"/>
+      <path d="M840,540 C930,520 1000,560 1090,550" stroke="#FF8A3D" stroke-width="1.5" opacity="0.24"/>
+    </g>
+    <g>
+      <circle cx="760" cy="120" r="4" fill="#FF8A3D" opacity="0.55"/>
+      <circle cx="1040" cy="170" r="5" fill="#FF8A3D" opacity="0.6"/>
+      <circle cx="1230" cy="240" r="4" fill="#4FD8C4" opacity="0.55"/>
+      <circle cx="900" cy="300" r="4" fill="#FF8A3D" opacity="0.45"/>
+      <circle cx="1160" cy="330" r="5" fill="#FF8A3D" opacity="0.55"/>
+      <circle cx="980" cy="420" r="4" fill="#4FD8C4" opacity="0.5"/>
+      <circle cx="1220" cy="450" r="6" fill="#4FD8C4" opacity="0.6"/>
+      <circle cx="840" cy="540" r="4" fill="#FF8A3D" opacity="0.4"/>
+      <circle cx="1090" cy="550" r="4" fill="#FF8A3D" opacity="0.45"/>
+    </g>
+  </svg>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Customer Success Intelligence · AI Infrastructure</div>
+      <h1>Your accounts are <span class="grad">talking</span>.<br><span class="dim">Most CS teams find out too late to listen.</span></h1>
+      <p class="hero-lede">
+        GPU utilization is dropping at three accounts. A champion's gone quiet.
+        A competitor just started a POC at your biggest renewal. CS Pulse catches
+        it the moment it happens — not eight weeks later at the QBR.
+      </p>
+      <div class="btn-row">
+        <a href="#cta" class="btn btn-primary">Request a Demo</a>
+        <a href="#narratives" class="btn btn-ghost">See It Catch a Churn Risk →</a>
+      </div>
+      <p class="hero-trust">Built for CS &amp; RevOps teams running renewal-critical accounts at AI chip companies, server OEMs, and data centers.</p>
+
+      <div class="chain" id="hero-chain" aria-hidden="true">
+        <div class="chain-node done"><span class="chain-dot"></span>Watch</div>
+        <div class="chain-line"></div>
+        <div class="chain-node active"><span class="chain-dot"></span>Detect</div>
+        <div class="chain-line"></div>
+        <div class="chain-node"><span class="chain-dot"></span>Act</div>
+        <div class="chain-line"></div>
+        <div class="chain-node"><span class="chain-dot"></span>Achieve</div>
+        <div class="chain-line chain-line--loop"></div>
+        <div class="chain-node loop"><span class="chain-dot"></span>Prove &amp; Learn</div>
+      </div>
+      <p class="chain-caption">Learn feeds back into Watch — the loop compounds every cycle.</p>
+
+      <div class="hero-proof">
+        <div><span class="num" data-count data-to="16" data-suffix=" wks">16 wks</span><span class="lbl">Earlier churn detection</span></div>
+        <div><span class="num" data-count data-to="3.2" data-prefix="$" data-suffix="M" data-decimals="1">$3.2M</span><span class="lbl">Retained in one account</span></div>
+        <div><span class="num" data-count data-to="2" data-suffix=" wks">2 wks</span><span class="lbl">To first health score</span></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- ============ VIDEO PLACEHOLDER 01 — HERO DEMO ============ -->
+      <div class="demo-slot" id="demo-hero" data-src="assets/videos/01-hero-overview.mp4" data-cover="1">
+        <video muted loop playsinline></video>
+        <div class="demo-slot__placeholder">
+          <div class="demo-slot__top">
+            <span class="demo-slot__rec">Rec</span>
+            <span>Clip 01 · 45–60s</span>
+          </div>
+          <div class="demo-slot__center">
+            <div class="demo-slot__play">▶</div>
+            <div class="demo-slot__title">Platform Overview</div>
+            <p class="demo-slot__brief">
+              Dashboard → account health scores → context graph → CSM's
+              top action for the day. One continuous walkthrough, narrated.
+            </p>
+          </div>
+          <div class="demo-slot__file">Drop file at <code>assets/videos/01-hero-overview.mp4</code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Verticals strip -->
+<div class="strip" id="verticals-strip">
+  <div class="wrap">
+    <div class="strip-item">AI Chip Companies</div>
+    <div class="strip-item">Server OEMs</div>
+    <div class="strip-item">Data Centers</div>
+    <div class="strip-item">Cloud Infrastructure</div>
+    <div class="strip-item">AI Infrastructure</div>
+    <div class="strip-item">Colocation</div>
+  </div>
+</div>
+
+<!-- =========================================================
+     NARRATIVES — the strongest asset, moved up front
+========================================================= -->
+<section class="section" id="narratives">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What CS Pulse Catches</div>
+      <h2>Every account is living one of eight stories. Most teams can't tell which one until it's over.</h2>
+      <p>CS Pulse recognizes the pattern while there's still time to change the ending.</p>
+    </div>
+
+    <div class="narrative-grid">
+      <div class="narrative-card">
+        <div class="narrative-tag">Scenario 01 · Silent Churn</div>
+        <div class="narrative-figure">$3.2M</div>
+        <h3>The account that looks fine — until it isn't</h3>
+        <p>Health score: 78, "healthy." But the champion's gone quiet, a QBR got skipped, and a competitor is running a POC. A dashboard that only reads the number misses all of it.</p>
+        <div class="narrative-outcome">
+          <span class="label">CS Pulse Outcome</span>
+          Compound risk flagged 16 weeks before renewal. Full $3.2M retained.
+        </div>
+      </div>
+
+      <div class="narrative-card">
+        <div class="narrative-tag">Scenario 02 · Land &amp; Expand</div>
+        <div class="narrative-figure">$1.2M → $4.8M</div>
+        <h3>Growth windows most teams miss</h3>
+        <p>A new customer lands at $1.2M for a single rack. Adoption velocity across the rollout tells you exactly when they're ready to expand — before they've even budgeted for it.</p>
+        <div class="narrative-outcome">
+          <span class="label">CS Pulse Outcome</span>
+          Three expansion waves in 12 months. 4x the original land value.
+        </div>
+      </div>
+
+      <div class="narrative-card">
+        <div class="narrative-tag">Scenario 03 · Crisis Recovery</div>
+        <div class="narrative-figure">2,495%</div>
+        <h3>When 40% of a rack goes dark</h3>
+        <p>A cooling failure takes a top account offline. The old playbook: a war room, finger-pointing, and a six-week scramble. CS Pulse has a faster one.</p>
+        <div class="narrative-outcome">
+          <span class="label">CS Pulse Outcome</span>
+          Recovery playbook fires within hours. Full ROI on the intervention: 2,495%.
+        </div>
+      </div>
+    </div>
+    <div class="narrative-more">+ 5 more story arcs — Expansion Champion · Competitive Displacement · Stalled Deployment · Seasonal Surge · Executive Sponsor Change</div>
+
+    <!-- ============ VIDEO PLACEHOLDER 02 — SILENT CHURN DETECTION ============ -->
+    <div style="margin-top:56px; max-width:760px;">
+      <div class="demo-slot" id="demo-narrative" data-src="assets/videos/02-silent-churn-detection.mp4" data-cover="1">
+        <video muted loop playsinline></video>
+        <div class="demo-slot__placeholder">
+          <div class="demo-slot__top">
+            <span class="demo-slot__rec">Rec</span>
+            <span>Clip 02 · 40–50s</span>
+          </div>
+          <div class="demo-slot__center">
+            <div class="demo-slot__play">▶</div>
+            <div class="demo-slot__title">Watch Silent Churn Get Caught</div>
+            <p class="demo-slot__brief">
+              Health score reads "78 · Healthy" → context graph surfaces champion
+              drop-off + skipped QBR + competitor POC → Silent Churn arc flags →
+              Renewal Safeguard playbook fires.
+            </p>
+          </div>
+          <div class="demo-slot__file">Drop file at <code>assets/videos/02-silent-churn-detection.mp4</code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     HOW IT WORKS
+========================================================= -->
+<section class="section" id="how-it-works">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow resolve">The Operating Rhythm</div>
+      <h2>From signal to action in hours — not at the next quarterly review</h2>
+      <p>Not a dashboard you check once a quarter. A closed loop that watches, detects, acts, achieves the outcome, proves it worked — and learns from it before the next cycle.</p>
+    </div>
+
+    <div class="process-grid">
+      <div class="process-card">
+        <div class="process-num">01 / Watch</div>
+        <h3>Every signal, every account</h3>
+        <p>38 KPIs monitored continuously — chosen because they actually predict expansion and churn, not because they're easy to track.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-num">02 / Detect</div>
+        <h3>Patterns, not single alerts</h3>
+        <p>A utilization drop plus a quiet champion plus a skipped QBR isn't three yellow flags — it's a pattern CS Pulse has seen before.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-num">03 / Act</div>
+        <h3>The right playbook, automatically</h3>
+        <p>Your CSM's top actions for the day arrive ranked by dollar impact, with clear ownership — not buried in a report.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-num">04 / Achieve</div>
+        <h3>The outcome, booked</h3>
+        <p>Renewal signed. Expansion closed. Crisis contained. The playbook doesn't end at "action taken" — it ends when the account is actually better off.</p>
+      </div>
+      <div class="process-card">
+        <div class="process-num">05 / Prove</div>
+        <h3>A record, not a guess</h3>
+        <p>Every intervention keeps what triggered it, what was done, and what it protected or grew — ready for the board.</p>
+      </div>
+      <div class="process-card process-card--loop">
+        <div class="process-num">06 / Learn</div>
+        <h3>Sharper with every cycle</h3>
+        <p>Every outcome — retained, expanded, or lost — retrains the model. Reinforcement learning recalibrates thresholds and playbook rankings against what actually worked, not what looked reasonable on paper. Then it feeds straight back into Watch.</p>
+      </div>
+    </div>
+
+    <!-- ============ VIDEO PLACEHOLDER 03 — PLAYBOOK IN ACTION ============ -->
+    <div class="split" style="margin-top:72px;">
+      <div>
+        <div class="eyebrow">Playbooks</div>
+        <h2 style="font-size:28px;">Five playbooks, each with a trigger and an owner</h2>
+        <p>No generic "engage the customer" advice. Every playbook fires on a specific threshold and hands your CSM a named next step.</p>
+        <div class="playbook-list" style="margin-top:24px;">
+          <div class="playbook-row">
+            <span class="playbook-time">14–21d</span>
+            <span class="playbook-name">SLA Stabilizer</span>
+            <p class="playbook-trigger"><b>Trigger:</b> 5+ SLA breaches/month</p>
+          </div>
+          <div class="playbook-row">
+            <span class="playbook-time">90d</span>
+            <span class="playbook-name">Renewal Safeguard</span>
+            <p class="playbook-trigger"><b>Trigger:</b> health below 70, renewal inside 90 days</p>
+          </div>
+          <div class="playbook-row">
+            <span class="playbook-time">60–90d</span>
+            <span class="playbook-name">Expansion Timing</span>
+            <p class="playbook-trigger"><b>Trigger:</b> health above 80, usage above 80% of license</p>
+          </div>
+        </div>
+      </div>
+      <div class="split-media">
+        <div class="demo-slot demo-slot--compact" id="demo-playbook" data-src="assets/videos/03-playbook-trigger.mp4" data-cover="1">
+          <video muted loop playsinline></video>
+          <div class="demo-slot__placeholder">
+            <div class="demo-slot__top">
+              <span class="demo-slot__rec">Rec</span>
+              <span>Clip 03 · 30–40s</span>
+            </div>
+            <div class="demo-slot__center">
+              <div class="demo-slot__play">▶</div>
+              <div class="demo-slot__title">A Playbook Firing, Start to Finish</div>
+              <p class="demo-slot__brief">CSM daily actions view → playbook triggers → named owner assigned → dollar impact shown.</p>
+            </div>
+            <div class="demo-slot__file">Drop file at <code>assets/videos/03-playbook-trigger.mp4</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     VERTICALS
+========================================================= -->
+<section class="section" id="verticals">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Built for Your Vertical</div>
+      <h2>Every infrastructure business watches something different</h2>
+      <p>CS Pulse adapts its health model to your vertical, then recalibrates monthly from your own outcomes.</p>
+    </div>
+    <div class="vertical-grid">
+      <div class="vertical-card">
+        <h4>AI Chip Companies</h4>
+        <p>GPU workload adoption drives expansion.</p>
+        <div class="vertical-kpis"><span>GPU Utilization</span><span>Training Throughput</span><span>Inference Latency</span></div>
+      </div>
+      <div class="vertical-card">
+        <h4>Server OEMs</h4>
+        <p>Deployment speed determines stickiness.</p>
+        <div class="vertical-kpis"><span>Time-to-First-Workload</span><span>RMA Rate</span><span>Config Accuracy</span></div>
+      </div>
+      <div class="vertical-card">
+        <h4>Data Centers</h4>
+        <p>Capacity trajectory predicts growth.</p>
+        <div class="vertical-kpis"><span>PUE</span><span>Thermal Score</span><span>Capacity Trend</span></div>
+      </div>
+      <div class="vertical-card">
+        <h4>Cloud Infrastructure</h4>
+        <p>Consumption patterns reveal intent.</p>
+        <div class="vertical-kpis"><span>Uptime</span><span>Compute Hour Trends</span><span>Workload Diversity</span></div>
+      </div>
+      <div class="vertical-card">
+        <h4>AI Infrastructure</h4>
+        <p>Workload performance signals expansion timing.</p>
+        <div class="vertical-kpis"><span>GPU Memory Efficiency</span><span>Batch Throughput</span><span>Training Completion</span></div>
+      </div>
+      <div class="vertical-card">
+        <h4>Colocation</h4>
+        <p>Partner channel health is revenue health.</p>
+        <div class="vertical-kpis"><span>Partner Engagement</span><span>Co-selling Pipeline</span><span>QBR Frequency</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     PARTNER ECOSYSTEM
+========================================================= -->
+<section class="section">
+  <div class="wrap split reverse">
+    <div class="split-media">
+      <img src="assets/img/partner-placeholder.svg" alt="Partner collaboration" style="border:1px solid var(--lt-border); border-radius:var(--radius-card); box-shadow: var(--lt-shadow);">
+    </div>
+    <div>
+      <div class="eyebrow resolve">Channel &amp; Partners</div>
+      <h2 style="font-size:30px;">Get your VARs and SIs out of spreadsheets and onto your radar</h2>
+      <p>Right now, partners run your accounts from their own spreadsheet, and you find out what happened after it's already happened. CS Pulse puts you both on the same page — no new tool for anyone to learn.</p>
+      <ul class="feature-list">
+        <li>Partners get plain-language answers instantly — no training manual, no new login</li>
+        <li>They see health scores and next-best actions for their own portfolio, and nothing else</li>
+        <li>Channel health is its own pillar, because a partner gone quiet is often your earliest churn signal</li>
+        <li>An inactive VAR automatically triggers a recovery playbook and names an owner — no one has to notice first</li>
+      </ul>
+      <p style="margin-top:20px;"><a href="blog/partner-channel-health-signal.html" class="mono" style="font-size:13px; color: var(--resolve-ink); text-decoration:underline;">Why channel silence is a churn signal →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     SECURITY
+========================================================= -->
+<section class="section" id="security">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Security &amp; Trust</div>
+      <h2>Enterprise-grade from day one — not an upgrade tier</h2>
+      <p>Full data isolation, a complete audit trail, and validated data for every customer, on every plan — not a security tier you have to ask for.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <span class="trust-status">Live</span>
+        <h4>Your Data Never Touches Theirs</h4>
+        <p>Every customer runs on an independent database schema — not a row-level filter hoping nothing leaks through. Real separation, not a setting.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-status">Live</span>
+        <h4>A Record of Everything, Automatically</h4>
+        <p>Every API call, upload, and configuration change is logged with who did it and when — nothing happens off the books.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-status">Live</span>
+        <h4>Every Upload Checked Before It Lands</h4>
+        <p>Files are schema-validated and isolated by customer the moment they arrive. No cross-customer access, ever.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-status">Live</span>
+        <h4>Bad Data Gets Flagged, Not Buried</h4>
+        <p>Out-of-range numbers are surfaced for review — never silently folded into a health score you're about to act on.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-status">Live</span>
+        <h4>Sessions That Expire Like They Should</h4>
+        <p>Inactivity detection and automatic expiry on every authenticated session. No dangling logins, no exceptions.</p>
+      </div>
+      <div class="trust-card">
+        <span class="trust-status soon">Coming Soon</span>
+        <h4>The Right View for Every Role</h4>
+        <p>CSMs see their accounts. Managers see the portfolio. Partners see only their own slice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     ABOUT / FOUNDER
+========================================================= -->
+<section class="section" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow">About AuctusAI</div>
+      <h2 style="font-size:30px;">Built by an operator who's sat on both sides of the QBR table</h2>
+      <p>AuctusAI was founded by a technology executive with 25 years in enterprise leadership at Oracle, IBM, Accenture, and DXC — the kind of career spent inside the exact rooms where "healthy" dashboards get presented right up until the account doesn't renew. CS Pulse is the tool that career was missing: intelligence that catches the account before the review, not a dashboard that only looks good during it.</p>
+      <p class="mono" style="font-size:13px; color: var(--text-faint); margin-top:24px;">auctus — Latin: "increased, augmented, grown"</p>
+    </div>
+    <div class="cred-list">
+      <div class="cred-row"><span class="cred-co">Oracle</span><span class="cred-detail">VP Product Engineering · 10 yrs · Fusion ERP, 5,000+ customers</span></div>
+      <div class="cred-row"><span class="cred-co">IBM</span><span class="cred-detail">Partner, Cloud Innovation · $140M P&amp;L · 700-person team</span></div>
+      <div class="cred-row"><span class="cred-co">Accenture</span><span class="cred-detail">Senior Manager, Cloud Advisory · 4 years</span></div>
+      <div class="cred-row"><span class="cred-co">DXC Technology</span><span class="cred-detail">Senior Managing Partner · $10M+ enterprise deals</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     BLOG TEASER
+========================================================= -->
+<section class="section" id="blog">
+  <div class="wrap">
+    <div class="section-head blog-head">
+      <div>
+        <div class="eyebrow">From the Blog</div>
+        <h2>Signals, playbooks, and the metrics that actually predict renewal</h2>
+        <p>What we're seeing across AI chip companies, server OEMs, and data centers — written for CS and RevOps, not for a whitepaper shelf.</p>
+      </div>
+      <a href="blog/index.html" class="btn btn-ghost-lt blog-head__cta">Visit the Blog →</a>
+    </div>
+
+    <div class="post-grid">
+      <a class="post-card" href="blog/the-health-score-that-lied.html">
+        <span class="post-card__tag">Churn Signals</span>
+        <h3>The Health Score That Lied</h3>
+        <p>A 78 reads "healthy" right up until the day it isn't. Why single-number scores miss the accounts most likely to walk — and what to watch instead.</p>
+        <span class="post-card__meta">6 min read</span>
+      </a>
+      <a class="post-card" href="blog/gpu-utilization-early-signal.html">
+        <span class="post-card__tag">AI Infrastructure Metrics</span>
+        <h3>GPU Utilization Is Talking. Is Anyone Listening?</h3>
+        <p>For AI chip companies and data centers, utilization curves say more about renewal risk than any support ticket ever will. Here's how to read them.</p>
+        <span class="post-card__meta">5 min read</span>
+      </a>
+      <a class="post-card" href="blog/expansion-window-land-and-expand.html">
+        <span class="post-card__tag">Growth &amp; Expansion</span>
+        <h3>The Expansion Window Nobody Puts on a Roadmap</h3>
+        <p>Customers rarely announce they're ready to grow. The adoption pattern usually tells you first — if you're tracking the right signal at the right time.</p>
+        <span class="post-card__meta">5 min read</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FINAL CTA
+========================================================= -->
+<section class="section cta-section" id="cta">
+  <div class="wrap">
+    <div class="cta-panel">
+      <div class="eyebrow center" style="justify-content:center;">Get Started</div>
+      <h2>See your own accounts through CS Pulse</h2>
+      <p>Bring your data, or use ours. Account health scoring and revenue intelligence live in two weeks — no rip-and-replace, no commitment.</p>
+
+      <!-- ============ VIDEO PLACEHOLDER 04 — CTA TEASER LOOP ============ -->
+      <div style="max-width:640px; margin: 0 auto 32px;">
+        <div class="demo-slot demo-slot--compact" id="demo-cta" data-src="assets/videos/04-cta-teaser.mp4">
+          <video muted loop playsinline></video>
+          <div class="demo-slot__placeholder">
+            <div class="demo-slot__top">
+              <span class="demo-slot__rec">Rec</span>
+              <span>Clip 04 · 15–20s loop</span>
+            </div>
+            <div class="demo-slot__center">
+              <div class="demo-slot__play">▶</div>
+              <div class="demo-slot__title">Silent, Looping Teaser</div>
+              <p class="demo-slot__brief">Short muted loop of the dashboard breathing — health scores updating, a signal pulsing. No narration needed.</p>
+            </div>
+            <div class="demo-slot__file">Drop file at <code>assets/videos/04-cta-teaser.mp4</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <a href="mailto:hello@auctusai.ai" class="btn btn-primary">Request a Demo</a>
+        <a href="mailto:hello@auctusai.ai" class="btn btn-ghost">Start a 2-Week Pilot</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#top" class="brand"><img src="assets/img/logo-mark.svg" alt="" class="brand-mark">AuctusAI</a>
+        <p style="margin-top:14px;">CS Pulse — the customer success platform for AI infrastructure companies. Signal-driven. Revenue-connected.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Product</h5>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#narratives">Outcomes</a>
+        <a href="#verticals">Verticals</a>
+        <a href="#security">Security</a>
+      </div>
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <a href="blog/index.html">Blog</a>
+        <a href="blog/the-health-score-that-lied.html">Churn Signals</a>
+        <a href="blog/gpu-utilization-early-signal.html">Infra Metrics</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#about">About</a>
+        <a href="#cta">Request Demo</a>
+        <a href="mailto:hello@auctusai.ai">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AuctusAI Inc. All rights reserved.</span>
+      <span>auctus — Latin for "growth through augmentation"</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
 </html>
