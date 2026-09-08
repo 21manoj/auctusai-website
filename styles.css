@@ -242,10 +242,18 @@ p { margin: 0 0 1em; color: var(--lt-text-dim); }
 }
 .hero p { color: var(--text-dim); }
 .hero .wrap { position: relative; z-index: 2; }
+/* The right column carries the hero demo, and it was the NARROWEST of the four
+   slots on the page (507px at any desktop width, against 534-760 for the rest)
+   — the flagship clip, rendered smallest. Chrome's control bar is a fixed
+   63-72 CSS px including the scrim above the buttons (measured, by diffing a
+   playing frame against the same frame paused), whatever size the slot is; so
+   the smaller the slot, the larger the share of the clip it covers. Giving the
+   demo column the larger share and a tighter gap takes it to 583px, where the
+   bar tops out at row 580 of the 720 and the burnt-in caption ends at 548. */
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 56px;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: 44px;
   align-items: center;
 }
 .hero-grid > div { min-width: 0; }
@@ -621,18 +629,25 @@ p { margin: 0 0 1em; color: var(--lt-text-dim); }
 .playbook-trigger { font-size: 13px; color: var(--lt-text-faint); margin: 0; }
 .playbook-trigger b { color: var(--lt-text-dim); font-weight: 500; }
 
-/* --- Two column with demo slot --- */
+/* --- Two column with demo slot ---
+   Same reasoning as .hero-grid: the media column holds a clip whose burnt-in
+   caption has to stay clear of Chrome's fixed-height control bar, so it gets
+   the larger share and a tighter gap. 1fr/1fr put this slot at 454px on a
+   1024-wide window, where the bar reached the subline; it is 499px there now. */
 .split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 56px;
+  grid-template-columns: 0.92fr 1.08fr;
+  gap: 44px;
   align-items: center;
 }
-@media (max-width: 880px) {
+/* Collapse at the same width .hero-grid does: between 881 and 940 the two-up
+   split left the clip at ~432px, narrow enough for the control bar to crowd the
+   caption again. */
+@media (max-width: 940px) {
   .split { grid-template-columns: 1fr; }
 }
 .split.reverse .split-media { order: -1; }
-@media (min-width: 881px) {
+@media (min-width: 941px) {
   .split.reverse .split-media { order: 2; }
 }
 .feature-list { list-style: none; margin: 24px 0 0; padding: 0; }
